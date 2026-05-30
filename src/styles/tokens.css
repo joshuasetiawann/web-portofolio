@@ -1,0 +1,97 @@
+/**
+ * Design tokens — Joshua Setiawan portfolio.
+ * Single source of truth for color & radius. DARK is the default theme.
+ *
+ * Two coexisting layers:
+ *  1. shadcn semantic tokens (--primary, --secondary, --accent, --muted, --card,
+ *     --popover, --border, --input, --ring, --destructive) — consumed by shadcn/ui.
+ *     NOTE: shadcn's `--accent` is a subtle HOVER SURFACE, not the brand teal.
+ *  2. brand tokens (--surface-1..3, --foreground-muted/subtle, --border-strong,
+ *     --accent-2 = brand teal, --success/--warning/--info, --glow, gradients).
+ *
+ * Canonical hexes match docs/design-tokens.md. Mapped to Tailwind utilities via
+ * the `@theme inline` block in globals.css.
+ */
+
+:root {
+  /* shadcn semantic — LIGHT */
+  --background: #f7f8fb;
+  --foreground: #11141c;
+  --card: #ffffff;
+  --card-foreground: #11141c;
+  --popover: #ffffff;
+  --popover-foreground: #11141c;
+  --primary: #3d5be0;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f3f8;
+  --secondary-foreground: #11141c;
+  --muted: #f1f3f8;
+  --muted-foreground: #4a5160;
+  --accent: #e8ebf2; /* hover surface */
+  --accent-foreground: #11141c;
+  --destructive: #c4302b;
+  --destructive-foreground: #ffffff;
+  --border: #dfe3ec;
+  --input: #b9c0cf;
+  --ring: #3d5be0;
+
+  /* brand extensions — LIGHT */
+  --surface-1: #ffffff;
+  --surface-2: #f1f3f8;
+  --surface-3: #e8ebf2;
+  --foreground-muted: #4a5160;
+  --foreground-subtle: #5c6473;
+  --border-strong: #c7cdda;
+  --accent-2: #0a7c66; /* brand teal (pine in light) — darkened for AA text contrast */
+  --accent-2-foreground: #ffffff;
+  --success: #15803d;
+  --warning: #b7791f;
+  --info: #0ea5e9;
+  --glow: #9ab2ff;
+
+  --gradient-accent: linear-gradient(135deg, #3d5be0 0%, #0a7c66 100%);
+  --gradient-surface: linear-gradient(180deg, var(--surface-1) 0%, var(--background) 100%);
+
+  /* radius base (drives the radius scale in globals @theme) */
+  --radius: 0.75rem;
+}
+
+.dark {
+  /* shadcn semantic — DARK (default) */
+  --background: #05070d;
+  --foreground: #eaedf5;
+  --card: #0a0d16;
+  --card-foreground: #eaedf5;
+  --popover: #171b2a;
+  --popover-foreground: #eaedf5;
+  --primary: #5e8bff;
+  --primary-foreground: #05070d;
+  --secondary: #10131f;
+  --secondary-foreground: #eaedf5;
+  --muted: #10131f;
+  --muted-foreground: #a4abbd;
+  --accent: #171b2a; /* hover surface */
+  --accent-foreground: #eaedf5;
+  --destructive: #ff6b6b;
+  --destructive-foreground: #05070d;
+  --border: #222838;
+  --input: #3a4358;
+  --ring: #5e8bff;
+
+  /* brand extensions — DARK */
+  --surface-1: #0a0d16;
+  --surface-2: #10131f;
+  --surface-3: #171b2a;
+  --foreground-muted: #a4abbd;
+  --foreground-subtle: #7e8699;
+  --border-strong: #2e3548;
+  --accent-2: #38e8c8; /* brand teal */
+  --accent-2-foreground: #04130f;
+  --success: #3dd68c;
+  --warning: #f5b544;
+  --info: #38bdf8;
+  --glow: #6e9bff;
+
+  --gradient-accent: linear-gradient(135deg, #5e8bff 0%, #38e8c8 100%);
+  --gradient-surface: linear-gradient(180deg, var(--surface-1) 0%, var(--background) 100%);
+}
