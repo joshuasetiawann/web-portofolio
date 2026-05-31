@@ -1,0 +1,12 @@
+// Pure numeric clamp helper.
+
+/**
+ * Constrain a value to the inclusive [min, max] range.
+ * Tolerates reversed bounds by normalizing min/max.
+ */
+export function clamp(value: number, min: number, max: number): number {
+  const lower = Math.min(min, max);
+  const upper = Math.max(min, max);
+
+  return Math.min(Math.max(value, lower), upper);
+}
