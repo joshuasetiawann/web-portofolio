@@ -1,0 +1,54 @@
+---
+title: Designing With Tokens, Not Hex Codes
+description: Why a small, semantic token system outlasts every redesign — and how to structure one.
+date: 2025-01-22
+tags: [Design Systems, CSS, Tailwind]
+---
+
+A color is not a decision. `#5e8bff` tells you nothing about _where_ it belongs.
+A token like `--primary` does — and that difference compounds across a codebase.
+
+## Semantic over literal
+
+Name tokens by role, never by appearance. `--surface-2` survives a rebrand;
+`--light-blue-300` does not.
+
+```css
+:root {
+  --background: #f7f8fb;
+  --primary: #3d5be0;
+}
+.dark {
+  --background: #05070d;
+  --primary: #5e8bff;
+}
+```
+
+Themes become a matter of swapping a single block of variables — every component
+that reads `--primary` updates for free.
+
+## Keep the system small
+
+A token system earns its keep by being _opinionated_:
+
+- One accent, one secondary, a handful of surfaces and text tiers.
+- A 4px spacing scale, a fixed radius scale, a short type scale.
+- Elevation expressed as a few named steps, not arbitrary shadows.
+
+Constraints are the point. The fewer choices a component author has, the more
+consistent the result.
+
+## Let the framework consume them
+
+Map tokens into your utility framework once, then forget they exist:
+
+```css
+@theme inline {
+  --color-primary: var(--primary);
+  --color-surface-2: var(--surface-2);
+}
+```
+
+Now `bg-primary` and `bg-surface-2` are just Tailwind classes — themeable,
+type-safe through the design system, and impossible to drift from the source of
+truth.

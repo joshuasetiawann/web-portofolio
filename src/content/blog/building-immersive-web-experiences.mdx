@@ -1,0 +1,48 @@
+---
+title: Building Immersive Web Experiences Without Sacrificing Performance
+description: How to layer WebGL, motion, and depth onto a site while keeping it fast, accessible, and resilient.
+date: 2025-05-18
+updated: 2025-06-02
+tags: [WebGL, Performance, Motion]
+featured: true
+---
+
+Immersive does not have to mean slow. The trick is treating spectacle as an
+_enhancement_ layered on top of a fast, semantic, server-rendered core — never
+as a replacement for it.
+
+## Start with the boring layer
+
+Before a single shader compiles, the page should already work: real HTML, real
+links, readable type, and a sensible heading order. If the GPU is dead and
+JavaScript never loads, the content is still there.
+
+> Depth over decoration. Every visual device must justify itself as depth,
+> light, or signal — and if it is none of those three, it gets cut.
+
+## Keep the heavy bytes off the critical path
+
+Three.js, GSAP, and the WebGL hero never belong in a route's first-load bundle.
+They load _after_ paint, behind a static poster that doubles as the LCP element.
+
+```ts
+const HeroScene = dynamic(() => import("@/three/hero-scene"), {
+  ssr: false,
+  loading: () => <HeroPoster />, // this is the LCP element
+});
+```
+
+A few rules keep it honest:
+
+- Clamp device pixel ratio (`dpr={[1, 1.75]}`) so phones do not render 9× the fragments.
+- Use `frameloop="demand"` — a static hero between interactions costs zero GPU frames.
+- Pause the canvas when it scrolls offscreen or the tab is hidden.
+
+## Respect the people who opted out
+
+Reduced motion is a designed state, not a missing one. When a visitor prefers
+reduced motion, the 3D layer becomes the poster, scroll choreography becomes an
+instant reveal, and smooth scrolling is disabled entirely.
+
+The result is a site that feels alive for those who want it, and calm, fast, and
+fully usable for everyone else.

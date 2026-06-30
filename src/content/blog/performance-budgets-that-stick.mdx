@@ -1,0 +1,43 @@
+---
+title: Performance Budgets That Actually Stick
+description: Turning Core Web Vitals from a launch-day scramble into an enforced, boring part of CI.
+date: 2025-03-09
+tags: [Performance, Engineering, CI]
+featured: true
+---
+
+Most performance work fails not because the techniques are hard, but because the
+wins quietly regress. A budget only matters if something fails the build when you
+cross it.
+
+## Pick numbers, then enforce them
+
+Targets without a gate are wishes. The pairing that works: a field target you
+watch, and a lab gate that blocks merges.
+
+| Metric                        | Target (p75 mobile) | CI hard-fail |
+| ----------------------------- | ------------------- | ------------ |
+| LCP                           | ≤ 2.5s              | > 2.5s       |
+| INP                           | ≤ 200ms             | > 200ms      |
+| CLS                           | ≤ 0.02              | > 0.1        |
+| First-load JS (content route) | ≤ 175KB gz          | over budget  |
+
+## Make regressions loud
+
+Three gates, all in CI:
+
+1. **Bundle analyzer** fails if a heavy library leaks into a route that should not ship it.
+2. **Lighthouse CI** asserts the lab thresholds on real routes, throttled.
+3. **Field RUM** reports p75 from real users, segmented by route.
+
+```bash
+ANALYZE=true pnpm build   # fails if three/gsap appear in a first-load chunk
+```
+
+## The cultural part
+
+> A budget the team cannot see is a budget the team will break.
+
+Surface the numbers on every pull request. When the bundle diff shows up as a
+comment, "make it a little smaller" stops being a heroic effort and becomes a
+normal review note.
