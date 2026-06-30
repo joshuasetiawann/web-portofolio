@@ -1,0 +1,5 @@
+# Native build scripts are skipped — these packages ship prebuilt binaries.
+ignoredBuiltDependencies:
+  - esbuild
+  - sharp
+  - unrs-resolver
