@@ -1,6 +1,9 @@
-// Server Action for the contact form: validates input + honeypot, returns a typed result state.
+// Server Action for the contact form: validates input + honeypot, delivers via
+// Resend when configured, and returns a typed result state.
 "use server";
 
+import { siteConfig } from "@/config/site";
+import { env } from "@/lib/env";
 import { contactSchema } from "@/lib/validations/contact";
 
 /** Result shape consumed by the client form via useActionState. */
@@ -13,12 +16,40 @@ export interface ContactFormState {
 export const initialContactState: ContactFormState = { status: "idle" };
 
 /**
- * Validate a contact submission and report the outcome.
- *
- * Phase 3: this does NOT send an email. It validates the payload, rejects bot
- * submissions (honeypot + minimum fill-time), and returns a friendly success
- * message. Wiring to Resend (or another transactional provider) happens later —
- * the validated values are already available here as `data`.
+ * Deliver a validated submission through the Resend HTTP API (no SDK needed).
+ * Returns true on success. Senders without a verified domain can use Resend's
+ * onboarding address — override with CONTACT_FROM_EMAIL once a domain is set up.
+ */
+async function sendViaResend(data: { name: string; email: string; message: string }) {
+  const to = env.CONTACT_TO_EMAIL ?? siteConfig.links.email;
+  const from = env.CONTACT_FROM_EMAIL ?? "Portfolio Contact <onboarding@resend.dev>";
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      reply_to: data.email,
+      subject: `Portfolio contact — ${data.name}`,
+      text: `From: ${data.name} <${data.email}>\n\n${data.message}`,
+    }),
+  });
+
+  if (!res.ok) {
+    console.error("contact: Resend delivery failed", res.status, await res.text());
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Validate a contact submission, reject bot submissions (honeypot + minimum
+ * fill-time), and deliver it via Resend when RESEND_API_KEY is configured.
+ * Without a key the submission is logged server-side only.
  */
 export async function submitContact(
   _prevState: ContactFormState,
@@ -63,8 +94,25 @@ export async function submitContact(
     };
   }
 
-  // TODO(phase-4): send `parsed.data` via Resend (or similar) before returning.
-  // Intentionally left as validation-only for Phase 3.
+  if (env.RESEND_API_KEY) {
+    const delivered = await sendViaResend(parsed.data).catch((error: unknown) => {
+      console.error("contact: Resend delivery threw", error);
+      return false;
+    });
+    if (!delivered) {
+      return {
+        status: "error",
+        message: `Something went wrong sending your message — please email me directly at ${siteConfig.links.email}.`,
+      };
+    }
+  } else {
+    // Delivery not configured yet: keep the submission visible in server logs
+    // so nothing is silently lost.
+    console.warn("contact: RESEND_API_KEY not set — submission logged only", {
+      name: parsed.data.name,
+      email: parsed.data.email,
+    });
+  }
 
   return {
     status: "success",

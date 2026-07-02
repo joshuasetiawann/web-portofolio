@@ -28,53 +28,55 @@ export const metadata: Metadata = buildMetadata({
   path: ROUTES.openSource,
 });
 
+// Real, verifiable artifacts on github.com/joshuasetiawann — no sample repos.
 const PACKAGES = [
   {
-    title: "ledger",
-    href: "https://github.com/joshuasetiawan/ledger",
-    eyebrow: "CLI toolkit",
+    title: "relaycli",
+    href: "https://github.com/joshuasetiawann/relaycli",
+    eyebrow: "Terminal coding agent",
     description:
-      "A zero-config, type-safe CLI toolkit with first-class TypeScript inference and Zod-validated commands.",
-    meta: "TypeScript · MIT",
-    tags: ["CLI", "TypeScript", "Zod"],
+      "Provider-agnostic, pipx-installable terminal coding agent (Claude Code / Codex-style) built on LiteLLM — bring your own model.",
+    meta: "Python · pipx",
+    tags: ["CLI", "AI Agents", "LiteLLM"],
   },
   {
-    title: "oklch-ramps",
-    href: "https://github.com/joshuasetiawan/oklch-ramps",
-    eyebrow: "Color utility",
+    title: "THUNITY-OS",
+    href: "https://github.com/joshuasetiawann/THUNITY-OS",
+    eyebrow: "Bootable OS ISO",
     description:
-      "Generate perceptually-even OKLCH color ramps that hold contrast across light and dark themes.",
-    meta: "TypeScript · MIT",
-    tags: ["Color", "OKLCH", "Accessibility"],
+      "A from-scratch x86 kernel shipped as versioned, bootable releases — 20 of them — runnable in QEMU or from a GRUB ISO.",
+    meta: "C · x86 Assembly",
+    tags: ["OS Dev", "Kernel", "QEMU"],
   },
   {
-    title: "particle-budget",
-    href: "https://github.com/joshuasetiawan/particle-budget",
-    eyebrow: "WebGL helper",
+    title: "web-portofolio",
+    href: "https://github.com/joshuasetiawann/web-portofolio",
+    eyebrow: "This site",
     description:
-      "Frame-budget scheduling primitives for keeping instanced GPU particle systems inside a target FPS.",
-    meta: "TypeScript · MIT",
-    tags: ["WebGL", "Performance", "Shaders"],
+      "The portfolio you're reading — Next.js App Router, token-driven design system, built end to end in the open.",
+    meta: "TypeScript · Next.js",
+    tags: ["Next.js", "Design System"],
   },
 ];
 
 const HIGHLIGHTS = [
   {
-    title: "radix-ui",
-    href: "https://github.com/radix-ui/primitives",
-    eyebrow: "Contributor",
+    title: "AllHaven-Application",
+    href: "https://github.com/joshuasetiawann/AllHaven-Application",
+    eyebrow: "Public build",
     description:
-      "Accessibility fixes and documentation improvements across the headless primitive library.",
-    meta: "Upstream contributions",
-    tags: ["Accessibility", "React"],
+      "Local-first AI workspace — multi-agent workflows over a self-hosted database, developed publicly from the first commit.",
+    meta: "Built in the open",
+    tags: ["AI Agents", "Local-first"],
   },
   {
-    title: "next.js",
-    href: "https://github.com/vercel/next.js",
-    eyebrow: "Contributor",
-    description: "Bug reports and small patches around the App Router and metadata APIs.",
-    meta: "Upstream contributions",
-    tags: ["Next.js", "Tooling"],
+    title: "ThuAI",
+    href: "https://github.com/joshuasetiawann/ThuAI-Personal-Business-Organization-AI",
+    eyebrow: "Public build",
+    description:
+      "A private AI 'company brain' with a four-agent council — every design decision visible in the commit history.",
+    meta: "Built in the open",
+    tags: ["AI Agents", "RAG"],
   },
 ];
 
@@ -191,8 +193,8 @@ export default function OpenSourcePage() {
         <Container>
           <SectionHeader
             eyebrow="Packages & tools"
-            title="Published on npm"
-            description="Small, focused packages you can drop into your own projects."
+            title="Published tools & releases"
+            description="Things you can install and run today — tools and versioned, bootable artifacts."
           />
           <div className="mt-10">
             <LedgerList
@@ -224,9 +226,9 @@ export default function OpenSourcePage() {
       <Section index="04" label="Upstream" rule>
         <Container>
           <SectionHeader
-            eyebrow="Upstream"
-            title="Contributions upstream"
-            description="Codebases I contribute to — fixes, docs, and small patches."
+            eyebrow="In the open"
+            title="Built in the open"
+            description="Larger platforms whose entire development history is public."
           />
           <div className="mt-10">
             <LedgerList

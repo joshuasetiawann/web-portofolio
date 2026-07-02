@@ -43,6 +43,12 @@
   --color-info: var(--info);
   --color-glow: var(--glow);
 
+  /* SIGNAL landing scene colors (resolve inside the .landing scope) */
+  --color-band: var(--band);
+  --color-chip: var(--chip-bg);
+  --color-chip-foreground: var(--chip-foreground);
+  --color-chip-foreground-muted: var(--chip-foreground-muted);
+
   /* DATUM instrument colors */
   --color-signal: var(--signal);
   --color-signal-hover: var(--signal-hover);

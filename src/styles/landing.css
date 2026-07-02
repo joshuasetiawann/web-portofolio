@@ -1,0 +1,814 @@
+/**
+ * SIGNAL landing scene — structural primitives + keyframes.
+ * Companion to the `.landing` token block in tokens.css; used only by the
+ * app/(home) route. Exact values from design baru/design_handoff_portfolio.
+ * Fonts: --font-sg (Space Grotesk) + --font-geist (Geist) are injected by
+ * app/(home)/layout.tsx; --font-code (Geist Mono) comes from the root layout.
+ */
+
+.landing {
+  font-family:
+    var(--font-geist),
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.landing .font-sg {
+  font-family: var(--font-sg), var(--font-geist), system-ui, sans-serif;
+}
+
+.landing .font-gm {
+  font-family: var(--font-code), ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* ---------- layout ---------- */
+
+.landing .l-container {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+.landing .l-section {
+  padding-block: clamp(84px, 11vw, 164px);
+}
+
+/* Alt band: separates scenes; hairline top+bottom, slightly tighter rhythm. */
+.landing .l-band {
+  background: var(--band);
+  border-block: 1px solid var(--border);
+  padding-block: clamp(60px, 8.5vw, 120px);
+}
+
+/* ---------- type ---------- */
+
+.landing .l-eyebrow {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+}
+
+.landing .l-h2 {
+  font-family: var(--font-sg), var(--font-geist), sans-serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 4.6vw, 3.5rem);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--foreground);
+}
+
+.landing .l-grad-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- shared bits ---------- */
+
+/* Small rotated-square gradient accent (eyebrow dots, marquee separators). */
+.landing .l-diamond {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex: none;
+  transform: rotate(45deg);
+  background: var(--gradient-accent);
+}
+
+.landing .l-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--chip-foreground);
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+
+.landing .l-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  padding: 15px 26px;
+  white-space: nowrap;
+  transition:
+    transform 0.35s var(--ease-out-expo),
+    border-color 0.35s ease,
+    background-color 0.35s ease,
+    opacity 0.35s ease;
+}
+
+.landing .l-pill-gradient {
+  background: var(--gradient-accent);
+  color: #04060b;
+  font-weight: 600;
+}
+
+.landing .l-pill-gradient:hover {
+  opacity: 0.92;
+}
+
+.landing .l-pill-outline {
+  border: 1px solid var(--border-strong);
+  color: var(--foreground);
+  background: transparent;
+}
+
+.landing .l-pill-outline:hover {
+  border-color: var(--foreground-subtle);
+}
+
+.landing :is(.l-pill, .l-chip, a, button):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.landing :is(.l-pill):focus-visible {
+  border-radius: 999px;
+}
+
+/* ---------- header ---------- */
+
+/* Collapse driven by --hdr (0→1 at scrollY > 32), set from landing-header.tsx. */
+.landing .l-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(var(--header-rgb), calc(var(--hdr, 0) * 0.72));
+  backdrop-filter: blur(calc(var(--hdr, 0) * 14px));
+  -webkit-backdrop-filter: blur(calc(var(--hdr, 0) * 14px));
+  border-bottom: 1px solid rgba(var(--border-rgb), calc(var(--hdr, 0) * 0.9));
+  transition:
+    background 0.45s ease,
+    border-color 0.45s ease;
+}
+
+.landing .l-header-inner {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 15px clamp(20px, 5vw, 56px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.landing .l-wordmark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-family: var(--font-sg), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: 18px;
+  color: var(--foreground);
+  min-width: 38px;
+}
+
+.landing .l-wordmark-full {
+  opacity: calc(1 - var(--hdr, 0));
+  transition: opacity 0.4s ease;
+  white-space: nowrap;
+}
+
+.landing .l-wordmark-mono {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: var(--hdr, 0);
+  transition: opacity 0.4s ease;
+}
+
+/* Narrow screens: the full wordmark can't share the row with both header
+ * actions — show the monogram permanently instead. */
+@media (max-width: 479px) {
+  .landing .l-wordmark-full {
+    opacity: 0;
+  }
+
+  .landing .l-wordmark-mono {
+    opacity: 1;
+  }
+}
+
+.landing .l-menu-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--foreground-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 9px 13px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.landing .l-menu-button:hover {
+  border-color: var(--border-strong);
+  color: var(--foreground);
+}
+
+/* ---------- jump menu overlay ---------- */
+
+.landing .l-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(var(--scrim-rgb), 0.86);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.landing .l-menu-content {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 22px clamp(20px, 5vw, 56px) 40px;
+}
+
+.landing .l-menu-close {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--foreground-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.landing .l-menu-close:hover {
+  border-color: var(--border-strong);
+  color: var(--foreground);
+}
+
+.landing .l-menu-link {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  text-decoration: none;
+  padding: clamp(8px, 1.4vw, 14px) 0;
+  border-bottom: 1px solid rgba(var(--border-rgb), 0.7);
+  color: var(--foreground);
+  transition:
+    color 0.25s,
+    padding-left 0.35s var(--ease-out-expo);
+}
+
+.landing .l-menu-link:hover {
+  color: var(--accent);
+  padding-left: 14px;
+}
+
+.landing .l-menu-link-index {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--foreground-subtle);
+  min-width: 34px;
+}
+
+.landing .l-menu-link-label {
+  font-family: var(--font-sg), sans-serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.landing .l-menu-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--foreground-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.landing .l-menu-social:hover {
+  color: var(--foreground);
+}
+
+/* ---------- hero ---------- */
+
+.landing .l-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 130px 0 90px;
+}
+
+/* z0: radial azure glow, top-center. */
+.landing .l-hero-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(72% 60% at 50% -6%, rgba(var(--glow-rgb), 0.18), transparent 62%);
+}
+
+/* z0: 66px hairline grid, radially masked. */
+.landing .l-hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(var(--border-rgb), 0.45) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--border-rgb), 0.45) 1px, transparent 1px);
+  background-size: 66px 66px;
+  -webkit-mask-image: radial-gradient(72% 68% at 50% 32%, #000, transparent 74%);
+  mask-image: radial-gradient(72% 68% at 50% 32%, #000, transparent 74%);
+  opacity: 0.55;
+}
+
+/* z1: the Signal Field canvas. */
+.landing .l-hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* z1: pointer spotlight (position via --mx/--my, set from landing-hero.tsx). */
+.landing .l-hero-spot {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 30%),
+    rgba(var(--glow-rgb), 0.12),
+    transparent 60%
+  );
+}
+
+.landing .l-hero-h1 {
+  margin: 26px 0 0;
+  font-family: var(--font-sg), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  font-size: clamp(3.4rem, 13vw, 10rem);
+  color: var(--foreground);
+}
+
+.landing .l-availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--foreground-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px;
+  background: rgba(10, 13, 22, 0.5);
+  white-space: nowrap;
+}
+
+.landing .l-availability-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  animation: l-pulse-dot 2.4s infinite;
+}
+
+.landing .l-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.landing .l-cue-line {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(180deg, var(--accent), transparent);
+  animation: l-cue-move 2s ease-in-out infinite;
+}
+
+/* ---------- stats strip ---------- */
+
+.landing .l-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.landing .l-stat {
+  padding: 30px clamp(18px, 2.2vw, 32px);
+  border-left: 1px solid var(--border);
+}
+
+.landing .l-stat-label {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--foreground-subtle);
+}
+
+.landing .l-stat-value {
+  margin-top: 16px;
+  font-family: var(--font-sg), sans-serif;
+  font-weight: 600;
+  font-size: clamp(2.4rem, 4vw, 3.3rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.landing .l-stat-note {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--foreground-muted);
+  max-width: 230px;
+}
+
+/* ---------- tech marquee ---------- */
+
+.landing .l-marquee {
+  position: relative;
+  overflow: hidden;
+  padding: 30px 0;
+  margin-top: clamp(40px, 6vw, 80px);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--band);
+}
+
+.landing .l-marquee-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: l-marquee-x 36s linear infinite;
+  will-change: transform;
+}
+
+.landing .l-marquee-word {
+  font-family: var(--font-sg), sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3.4vw, 2.7rem);
+  line-height: 1;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--marquee-stroke);
+}
+
+/* ---------- section header ---------- */
+
+.landing .l-section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--foreground-subtle);
+}
+
+.landing .l-section-title {
+  margin: 18px 0 0;
+  font-family: var(--font-sg), sans-serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 4.6vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+
+/* Compact outline pill for section-header actions. */
+.landing .l-pill-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--foreground);
+  text-decoration: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 12px 20px;
+  white-space: nowrap;
+  transition:
+    border-color 0.25s,
+    background 0.25s;
+}
+
+.landing .l-pill-action:hover {
+  border-color: var(--accent);
+  background: rgba(var(--glow-rgb), 0.07);
+}
+
+/* ---------- work cards ---------- */
+
+.landing .l-card-featured {
+  margin-top: 52px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--surface-1);
+}
+
+.landing .l-featured-chip {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  z-index: 1;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  background: rgba(var(--header-rgb), 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 7px 13px;
+  pointer-events: none;
+}
+
+.landing .l-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--foreground-subtle);
+}
+
+.landing .l-metric-value {
+  font-family: var(--font-sg), sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.landing .l-metric-label {
+  margin-top: 5px;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--foreground-subtle);
+}
+
+.landing .l-chip-round {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--foreground-muted);
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 11px;
+  white-space: nowrap;
+}
+
+/* Dimmer, tighter variant for grid-card tag chips. */
+.landing .l-chip-dim {
+  color: var(--chip-foreground-muted);
+  padding: 4px 10px;
+}
+
+.landing .l-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition:
+    border-color 0.3s,
+    transform 0.35s var(--ease-out-expo);
+}
+
+.landing .l-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-6px);
+}
+
+.landing .l-index-chip {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  z-index: 1;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--chip-foreground);
+  background: rgba(var(--header-rgb), 0.5);
+  border-radius: 6px;
+  padding: 2px 7px;
+  pointer-events: none;
+}
+
+/* Empty-state cover: the handoff's quiet azure→teal gradient panel. */
+.landing .l-cover-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(var(--glow-rgb), 0.2), transparent 55%),
+    linear-gradient(
+      135deg,
+      rgba(var(--glow-rgb), 0.14),
+      rgba(var(--accent-2-rgb), 0.1) 60%,
+      transparent
+    ),
+    var(--surface-2);
+}
+
+.landing .l-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.landing .l-card-link:hover {
+  color: var(--foreground);
+}
+
+.landing .l-card-link-primary {
+  color: var(--foreground);
+}
+
+.landing .l-card-link-primary:hover {
+  color: var(--accent);
+}
+
+/* ---------- capabilities ---------- */
+
+.landing .l-cap-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 26px;
+  transition: border-color 0.3s;
+}
+
+.landing .l-cap-card:hover {
+  border-color: var(--border-strong);
+}
+
+.landing .l-cap-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--chip-foreground);
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 7px 12px;
+  white-space: nowrap;
+}
+
+/* ---------- writing & research rows ---------- */
+
+.landing .l-writing-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  padding: 24px 8px;
+  border-top: 1px solid var(--border);
+  text-decoration: none;
+  transition:
+    padding-left 0.35s var(--ease-out-expo),
+    background 0.3s;
+}
+
+.landing .l-writing-row:hover {
+  padding-left: 16px;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.landing .l-kind-pill {
+  flex: 0 0 auto;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 11px;
+}
+
+/* ---------- keyframes ---------- */
+
+/* Tech marquee: list duplicated twice, slide half its width for a seamless loop. */
+@keyframes l-marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Availability pill: pulsing teal dot. */
+@keyframes l-pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 232, 200, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(56, 232, 200, 0);
+  }
+}
+
+/* Hero scroll cue: gradient line bobbing. */
+@keyframes l-cue-move {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 0.45;
+  }
+}
+
+/* Master switch: [data-motion="off"] (visible "Pause motion" control) and the
+ * system preference both freeze every CSS-driven loop in the scene. */
+@media (prefers-reduced-motion: reduce) {
+  .landing *,
+  .landing *::before,
+  .landing *::after {
+    animation-play-state: paused !important;
+  }
+}
+
+.landing[data-motion="off"] *,
+.landing[data-motion="off"] *::before,
+.landing[data-motion="off"] *::after {
+  animation-play-state: paused !important;
+}

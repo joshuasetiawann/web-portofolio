@@ -124,3 +124,37 @@
   --gradient-accent: linear-gradient(0deg, var(--signal), var(--signal));
   --gradient-surface: linear-gradient(0deg, var(--surface-1), var(--surface-1));
 }
+
+/* =============== SIGNAL — immersive-dark landing scene =============== */
+/* Scope: the home route only, via the `.landing` wrapper in app/(home)/layout.tsx.
+ * Source of truth: design baru/design_handoff_portfolio/README.md (hi-fi handoff).
+ * One azure→teal gradient used as light; hairline borders; radii return (20/26/999)
+ * as literal values in the landing components — the DATUM radius-0 scale is untouched.
+ * Always dark: these values do not react to the .dark theme class. */
+.landing {
+  --background: #05070d;
+  --foreground: #eaedf5;
+  --foreground-muted: #a4abbd;
+  --foreground-subtle: #7e8699;
+  --surface-1: #0a0d16;
+  --surface-2: #10131f;
+  --surface-3: #171b2a;
+  --band: #07090f; /* alt band separating scenes */
+  --border: #222838;
+  --border-rgb: 34, 40, 56;
+  --border-strong: #2e3548;
+  --accent: #5e8bff; /* azure */
+  --accent-2: #38e8c8; /* teal */
+  --accent-2-rgb: 56, 232, 200;
+  --glow: #5e8bff;
+  --glow-rgb: 94, 139, 255;
+  --chip-bg: #10131f;
+  --chip-foreground: #c3ccdb;
+  --chip-foreground-muted: #8b93a5;
+  --marquee-stroke: #333c52;
+  --scrim-rgb: 4, 6, 11; /* jump-menu overlay + gallery scrims */
+  --header-rgb: 5, 7, 13; /* header collapse background */
+  --gradient-accent: linear-gradient(120deg, var(--accent), var(--accent-2));
+  --gradient-text: linear-gradient(110deg, var(--accent), var(--accent-2));
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
