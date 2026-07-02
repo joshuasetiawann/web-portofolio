@@ -1,6 +1,9 @@
 // TickCounter — a stepped, instrument-style count-up. Animates once when scrolled
 // into view via a short bounded rAF (not a persistent loop). Renders tabular mono so
 // width never jitters. Reduced motion shows the final value immediately.
+//
+// Props are fully serializable (no function props) so it can be rendered directly from
+// Server Components: use `prefix`/`suffix` for units and `group` for locale grouping.
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -13,7 +16,10 @@ interface TickCounterProps {
   from?: number;
   steps?: number;
   durationMs?: number;
-  format?: (n: number) => string;
+  prefix?: string;
+  suffix?: string;
+  /** Locale thousands grouping (default true). */
+  group?: boolean;
   className?: string;
 }
 
@@ -22,7 +28,9 @@ export function TickCounter({
   from = 0,
   steps = 24,
   durationMs = 400,
-  format,
+  prefix = "",
+  suffix = "",
+  group = true,
   className,
 }: TickCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -66,9 +74,13 @@ export function TickCounter({
     };
   }, [value, from, steps, durationMs, reducedMotion]);
 
+  const shown = group ? display.toLocaleString("en-US") : String(display);
+
   return (
     <span ref={ref} className={cn("tabular", className)}>
-      {format ? format(display) : display}
+      {prefix}
+      {shown}
+      {suffix}
     </span>
   );
 }

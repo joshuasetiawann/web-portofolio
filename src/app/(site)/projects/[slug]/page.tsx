@@ -1,23 +1,27 @@
-// Project detail / case study — narrative sections gated on available content.
+// Project detail — DATUM "CASE STUDY": a DefinitionList spec header (+ synthetic COORD)
+// above Archivo prose on a 720 measure, mono HOME / WORK / {slug} path, section rules +
+// gutter ticks between gated blocks, the media figure as the one calibration moment, and
+// metrics that count up once.
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
+import { notFound } from "next/navigation";
 import { Github } from "@/lib/icons";
 
 import { CTASection } from "@/components/sections/cta-section";
 import { Section } from "@/components/layout/section";
 import { Container } from "@/components/layout/container";
 import { SectionHeader } from "@/components/layout/section-header";
-import { ProjectGrid } from "@/components/portfolio/project-grid";
+import { DefinitionList, type DefinitionItem } from "@/components/layout/definition-list";
+import { GutterIndex } from "@/components/layout/gutter-index";
+import { Rule } from "@/components/layout/rule";
+import { LedgerList, LedgerRow } from "@/components/layout/ledger-row";
 import { TechStackList } from "@/components/portfolio/tech-stack-list";
-import { Breadcrumbs } from "@/components/common/breadcrumbs";
-import { StatCard } from "@/components/common/stat-card";
-import { Badge } from "@/components/ui/badge";
+import { Calibration } from "@/components/motion/calibration";
+import { TickCounter } from "@/components/motion/tick-counter";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "@/components/shared/external-link";
 import { JsonLd } from "@/components/shared/json-ld";
-import { Reveal } from "@/components/motion/reveal";
 import { projects, getProjectBySlug, getRelatedProjects } from "@/data/projects";
 import { buildMetadata } from "@/lib/metadata";
 import { absoluteUrl } from "@/lib/seo";
@@ -54,6 +58,15 @@ export async function generateMetadata({ params }: ProjectDetailPageProps): Prom
   });
 }
 
+// Renders a metric string ("2.1s", "−60%", "<50ms") as a stepped count-up on the leading
+// numeral while preserving any prefix/suffix. Falls back to the raw string if non-numeric.
+function MetricValue({ value }: { value: string }) {
+  const match = value.match(/^(\D*?)(-?\d+(?:\.\d+)?)(\D*)$/);
+  if (!match) return <>{value}</>;
+  const [, prefix, num, suffix] = match;
+  return <TickCounter value={parseFloat(num)} prefix={prefix} suffix={suffix} group={false} />;
+}
+
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
@@ -81,58 +94,69 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     ...(project.links.live ? { sameAs: project.links.live } : {}),
   };
 
-  const meta: { label: string; value: string }[] = [
-    { label: "Role", value: project.role },
-    { label: "Year", value: String(project.year) },
-    { label: "Status", value: STATUS_LABEL[project.status] ?? project.status },
-    ...(project.client ? [{ label: "Client", value: project.client }] : []),
-    ...(project.team ? [{ label: "Team", value: project.team }] : []),
-    ...(project.timeline ? [{ label: "Timeline", value: project.timeline }] : []),
+  // Synthetic filing coordinate for the spec header (instrument decoration).
+  const coordinate = `${String(project.order).padStart(3, "0")} · ${project.year} · ${project.kind.toUpperCase()}`;
+
+  const specItems: DefinitionItem[] = [
+    { field: "Role", value: project.role },
+    { field: "Year", value: String(project.year), numeric: true },
+    { field: "Status", value: STATUS_LABEL[project.status] ?? project.status },
+    ...(project.client ? [{ field: "Client", value: project.client }] : []),
+    ...(project.team ? [{ field: "Team", value: project.team }] : []),
+    ...(project.timeline ? [{ field: "Timeline", value: project.timeline }] : []),
+    { field: "Coord", value: coordinate, numeric: true },
   ];
+
+  // The one calibration moment: the media figure when present, else the metrics readout.
+  const calibrateMedia = Boolean(project.media && project.media.length > 0);
+
+  // Sequential gutter indices for whichever gated blocks actually render (hero = 01).
+  let sectionCount = 1;
+  const nextIndex = () => String(++sectionCount).padStart(2, "0");
 
   return (
     <>
       <JsonLd data={jsonLd} />
 
-      <Section className="pt-24 sm:pt-28 lg:pt-32">
+      <Section index="01" label="Spec" className="pt-24 sm:pt-28 lg:pt-32">
         <Container>
-          <Breadcrumbs
-            items={[
-              { label: "Home", href: ROUTES.landing },
-              { label: "Work", href: ROUTES.projects },
-              { label: project.title },
-            ]}
-          />
+          <nav
+            aria-label="Breadcrumb"
+            className="font-mono text-mono-label tracking-wider text-foreground-subtle uppercase"
+          >
+            <ol className="flex flex-wrap items-center gap-2">
+              <li>
+                <Link href={ROUTES.landing} className="transition-colors hover:text-signal">
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li>
+                <Link href={ROUTES.projects} className="transition-colors hover:text-signal">
+                  Work
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page" className="text-foreground">
+                {project.slug}
+              </li>
+            </ol>
+          </nav>
 
           <div className="mt-8 flex flex-col gap-6">
-            <div className="flex flex-wrap items-center gap-2 font-mono text-xs tracking-wider text-accent-2 uppercase">
-              <span>{project.category}</span>
-              <span aria-hidden="true" className="text-foreground-subtle">
-                /
-              </span>
-              <span className="text-foreground-muted">
-                {STATUS_LABEL[project.status] ?? project.status}
-              </span>
-            </div>
+            <span className="inline-flex items-center gap-3 font-mono text-mono-eyebrow text-signal uppercase">
+              <Rule signal />
+              <GutterIndex prefix="PRJ" index={project.order} />
+              <span className="text-foreground-subtle">{project.category}</span>
+            </span>
 
-            <h1 className="max-w-3xl font-display text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-4xl lg:text-5xl">
+            <h1 className="max-w-3xl font-display text-display-xl text-balance text-foreground">
               {project.title}
             </h1>
 
-            <p className="max-w-2xl text-base leading-relaxed text-pretty text-foreground-muted sm:text-lg">
-              {project.summary}
-            </p>
+            <p className="max-w-2xl text-pretty text-foreground-muted">{project.summary}</p>
 
-            <dl className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
-              {meta.map((item) => (
-                <div key={item.label} className="flex flex-col gap-0.5">
-                  <dt className="font-mono text-xs tracking-wide text-foreground-subtle uppercase">
-                    {item.label}
-                  </dt>
-                  <dd className="font-medium text-foreground">{item.value}</dd>
-                </div>
-              ))}
-            </dl>
+            <DefinitionList items={specItems} className="mt-2 max-w-2xl" />
 
             {project.stack.length > 0 ? (
               <TechStackList stack={project.stack} className="mt-2" />
@@ -163,130 +187,99 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
       </Section>
 
       {project.overview ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Overview" rule>
           <Container size="prose">
-            <Reveal>
-              <SectionHeader eyebrow="Overview" title="What it is" />
-              <p className="mt-6 text-base leading-relaxed text-pretty text-foreground-muted sm:text-lg">
-                {project.overview}
-              </p>
-            </Reveal>
+            <SectionHeader eyebrow="Overview" title="What it is" />
+            <p className="mt-6 text-pretty text-foreground-muted">{project.overview}</p>
           </Container>
         </Section>
       ) : null}
 
       {project.problem ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Problem" rule>
           <Container size="prose">
-            <Reveal>
-              <SectionHeader eyebrow="Problem" title="The challenge" />
-              <p className="mt-6 text-base leading-relaxed text-pretty text-foreground-muted sm:text-lg">
-                {project.problem}
-              </p>
-            </Reveal>
+            <SectionHeader eyebrow="Problem" title="The challenge" />
+            <p className="mt-6 text-pretty text-foreground-muted">{project.problem}</p>
           </Container>
         </Section>
       ) : null}
 
       {project.role || (project.constraints && project.constraints.length > 0) ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Constraints" rule>
           <Container size="prose">
-            <Reveal>
-              <SectionHeader eyebrow="Role & constraints" title="My part, and the limits" />
-              <p className="mt-6 text-base leading-relaxed text-pretty text-foreground-muted sm:text-lg">
-                As <span className="font-medium text-foreground">{project.role}</span>, I owned
-                delivery within a tight set of constraints.
-              </p>
-              {project.constraints && project.constraints.length > 0 ? (
-                <ul className="mt-6 space-y-3">
-                  {project.constraints.map((constraint) => (
-                    <li key={constraint} className="flex gap-3 text-base text-foreground-muted">
-                      <span
-                        aria-hidden="true"
-                        className="mt-2 size-1.5 shrink-0 rounded-full bg-accent-2"
-                      />
-                      <span>{constraint}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </Reveal>
+            <SectionHeader eyebrow="Role & constraints" title="My part, and the limits" />
+            <p className="mt-6 text-pretty text-foreground-muted">
+              As <span className="text-foreground">{project.role}</span>, I owned delivery within a
+              tight set of constraints.
+            </p>
+            {project.constraints && project.constraints.length > 0 ? (
+              <ul className="mt-6 space-y-3">
+                {project.constraints.map((constraint) => (
+                  <li key={constraint} className="flex gap-3 text-foreground-muted">
+                    <Rule signal className="mt-3 shrink-0" />
+                    <span>{constraint}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </Container>
         </Section>
       ) : null}
 
       {project.solution ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Solution" rule>
           <Container size="prose">
-            <Reveal>
-              <SectionHeader eyebrow="Solution" title="The approach" />
-              <p className="mt-6 text-base leading-relaxed text-pretty text-foreground-muted sm:text-lg">
-                {project.solution}
-              </p>
-            </Reveal>
+            <SectionHeader eyebrow="Solution" title="The approach" />
+            <p className="mt-6 text-pretty text-foreground-muted">{project.solution}</p>
           </Container>
         </Section>
       ) : null}
 
       {project.architecture ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Architecture" rule>
           <Container size="prose">
-            <Reveal>
-              <SectionHeader eyebrow="Architecture" title="How it fits together" />
-              <p className="mt-6 text-base leading-relaxed text-pretty text-foreground-muted sm:text-lg">
-                {project.architecture}
-              </p>
-            </Reveal>
+            <SectionHeader eyebrow="Architecture" title="How it fits together" />
+            <p className="mt-6 text-pretty text-foreground-muted">{project.architecture}</p>
           </Container>
         </Section>
       ) : null}
 
       {project.features && project.features.length > 0 ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Features" rule>
           <Container>
-            <Reveal>
-              <SectionHeader eyebrow="Features" title="What it does" />
-              <ul className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {project.features.map((feature) => (
-                  <li
-                    key={feature.title}
-                    className="rounded-2xl border border-border bg-surface-1 p-6 transition-colors hover:border-border-strong"
-                  >
-                    <h3 className="font-display text-lg font-semibold text-foreground">
-                      {feature.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
-                      {feature.description}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+            <SectionHeader eyebrow="Features" title="What it does" />
+            <DefinitionList
+              className="mt-8"
+              items={project.features.map((feature) => ({
+                field: feature.title,
+                value: feature.description,
+              }))}
+            />
           </Container>
         </Section>
       ) : null}
 
       {project.media && project.media.length > 0 ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Media" rule>
           <Container>
-            <Reveal>
-              <SectionHeader eyebrow="Media" title="A look inside" />
-              <ul className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <SectionHeader eyebrow="Media" title="A look inside" />
+            <Calibration className="mt-10">
+              <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {project.media.map((item, index) => (
                   <li key={`${item.alt}-${index}`}>
-                    <figure className="overflow-hidden rounded-2xl border border-border bg-surface-1">
+                    <figure className="border border-border bg-surface-1">
                       <div
                         role="img"
                         aria-label={item.alt}
-                        className="relative aspect-[16/10] w-full bg-gradient-to-br from-surface-2 to-surface-3"
+                        className="relative aspect-[16/10] w-full bg-surface-1"
                       >
                         <div
                           aria-hidden="true"
-                          className="h-full w-full bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:32px_32px]"
+                          className="h-full w-full bg-[linear-gradient(to_right,var(--grid-line)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-line)_1px,transparent_1px)] bg-[size:32px_32px]"
                         />
                       </div>
                       {item.caption ? (
-                        <figcaption className="border-t border-border px-4 py-3 text-sm text-foreground-muted">
+                        <figcaption className="border-t border-border px-4 py-3 font-mono text-mono-meta text-foreground-muted">
                           {item.caption}
                         </figcaption>
                       ) : null}
@@ -294,59 +287,62 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                   </li>
                 ))}
               </ul>
-            </Reveal>
+            </Calibration>
           </Container>
         </Section>
       ) : null}
 
       {project.metrics && project.metrics.length > 0 ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Metrics" rule>
           <Container>
-            <Reveal>
-              <SectionHeader eyebrow="Metrics" title="The outcome" />
-              <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {project.metrics.map((metric) => (
-                  <StatCard key={metric.label} label={metric.label} value={metric.value} />
-                ))}
-              </div>
-            </Reveal>
+            <SectionHeader eyebrow="Metrics" title="The outcome" />
+            {calibrateMedia ? (
+              <DefinitionList
+                className="mt-10"
+                layout="grid"
+                items={project.metrics.map((metric) => ({
+                  field: metric.label,
+                  value: <MetricValue value={metric.value} />,
+                }))}
+              />
+            ) : (
+              <Calibration className="mt-10">
+                <DefinitionList
+                  layout="grid"
+                  items={project.metrics.map((metric) => ({
+                    field: metric.label,
+                    value: <MetricValue value={metric.value} />,
+                  }))}
+                />
+              </Calibration>
+            )}
           </Container>
         </Section>
       ) : null}
 
       {project.lessons && project.lessons.length > 0 ? (
-        <Section className="pt-0">
+        <Section index={nextIndex()} label="Reflection" rule>
           <Container size="prose">
-            <Reveal>
-              <SectionHeader eyebrow="Reflection" title="Lessons learned" />
-              <ul className="mt-6 space-y-4">
-                {project.lessons.map((lesson) => (
-                  <li
-                    key={lesson}
-                    className="flex gap-3 text-base leading-relaxed text-pretty text-foreground-muted"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="mt-2 size-1.5 shrink-0 rounded-full bg-primary"
-                    />
-                    <span>{lesson}</span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+            <SectionHeader eyebrow="Reflection" title="Lessons learned" />
+            <ul className="mt-6 space-y-4">
+              {project.lessons.map((lesson) => (
+                <li key={lesson} className="flex gap-3 text-pretty text-foreground-muted">
+                  <Rule signal className="mt-3 shrink-0" />
+                  <span>{lesson}</span>
+                </li>
+              ))}
+            </ul>
           </Container>
         </Section>
       ) : null}
 
       {project.tags.length > 0 ? (
-        <Section className="pt-0">
+        <Section rule>
           <Container>
-            <ul className="flex flex-wrap gap-2">
+            <ul className="flex flex-wrap gap-2 font-mono text-mono-label tracking-wider text-foreground-muted uppercase">
               {project.tags.map((tag) => (
-                <li key={tag}>
-                  <Badge variant="outline" className="font-normal">
-                    {tag}
-                  </Badge>
+                <li key={tag} className="border border-border px-3 py-1.5">
+                  {tag}
                 </li>
               ))}
             </ul>
@@ -355,7 +351,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
       ) : null}
 
       {related.length > 0 ? (
-        <Section>
+        <Section index={nextIndex()} label="Related" rule>
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <SectionHeader eyebrow="More work" title="Related projects" />
@@ -364,7 +360,23 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
               </Button>
             </div>
             <div className="mt-10">
-              <ProjectGrid projects={related} />
+              <LedgerList label="Related projects">
+                {related.map((item) => {
+                  const firstMetric = item.metrics?.[0];
+                  return (
+                    <LedgerRow
+                      key={item.slug}
+                      prefix="PRJ"
+                      index={item.order}
+                      title={item.title}
+                      href={`${ROUTES.projects}/${item.slug}`}
+                      coordinate={`${item.category} · ${STATUS_LABEL[item.status] ?? item.status}`}
+                      specs={[item.stack.join(" / "), String(item.year), item.role]}
+                      metric={firstMetric ? { value: firstMetric.value } : undefined}
+                    />
+                  );
+                })}
+              </LedgerList>
             </div>
           </Container>
         </Section>

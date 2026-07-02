@@ -1,21 +1,17 @@
+// Philosophy — DATUM "PAPER DATASHEET": long-form prose with oversized flush-left
+// pull-quotes; two-col SectionHeader/prose keep the asymmetry but lose card borders.
+// `principles` self-number 01–04, promoted to the gutter with orange keying; the datasheet
+// blocks become DefinitionLists. One calibration: the "In practice" code section scan.
 import type { Metadata } from "next";
-import {
-  Accessibility,
-  Boxes,
-  GitBranch,
-  Gauge,
-  Lightbulb,
-  Network,
-  Sparkles,
-  Target,
-} from "lucide-react";
 
 import { PageHero } from "@/components/sections/page-hero";
 import { CTASection } from "@/components/sections/cta-section";
 import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
 import { SectionHeader } from "@/components/layout/section-header";
-import { Reveal } from "@/components/motion/reveal";
+import { DefinitionList } from "@/components/layout/definition-list";
+import { Rule } from "@/components/layout/rule";
+import { Calibration } from "@/components/motion/calibration";
 import { CodeSnippet } from "@/components/common/code-snippet";
 import { buildMetadata } from "@/lib/metadata";
 import { ROUTES } from "@/constants/routes";
@@ -29,24 +25,61 @@ export const metadata: Metadata = buildMetadata({
 
 const principles = [
   {
-    icon: Lightbulb,
     title: "Make the simple thing first",
     body: "Most problems don't need the clever solution yet. I build the obvious version, let it teach me where the real complexity lives, and only then reach for abstraction — earned, not anticipated.",
   },
   {
-    icon: Target,
     title: "Optimise for the reader",
     body: "Code is written once and read constantly. I'd trade a few keystrokes for a name that explains itself every single time. The audience is the next maintainer, and they're usually tired.",
   },
   {
-    icon: GitBranch,
     title: "Make failure states explicit",
     body: "The interesting part of any feature is what happens when things go wrong. I'd rather model errors in the type system than discover them in production logs.",
   },
   {
-    icon: Sparkles,
     title: "Delete more than you add",
     body: "The best pull requests often remove code. Less surface area means fewer bugs, faster builds, and a system small enough to actually hold in your head.",
+  },
+];
+
+const performance = [
+  {
+    field: "Budget, then build",
+    value:
+      "I set a rough cost ceiling for a screen — bundle weight, main-thread work, network round-trips — before I add to it. A budget turns “is this fast?” into a question with an answer.",
+  },
+  {
+    field: "Animation has a price",
+    value:
+      "Motion is something the device has to afford. I stay on the compositor, avoid animating layout, and let go of an effect the moment it costs more than it gives.",
+  },
+  {
+    field: "Measure on the slow device",
+    value:
+      "The site is fast on my laptop by accident. What matters is the mid-range phone on a flaky network — that's the user I tune for, because that's the user most likely to be there.",
+  },
+];
+
+const codeQuality = [
+  {
+    field: "Names carry the design",
+    value:
+      "If I can't name something cleanly, I usually don't understand it yet. A good name is a finished thought; a vague one is a deferred bug.",
+  },
+  {
+    field: "Types can't lie",
+    value:
+      "I lean on strict TypeScript to encode the rules of a system so the compiler enforces what a comment could only suggest.",
+  },
+  {
+    field: "Tests describe intent",
+    value:
+      "I test behaviour, not implementation. A good test reads like a promise about what the code does — and stays true when the internals change.",
+  },
+  {
+    field: "Consistency beats brilliance",
+    value:
+      "A predictable codebase is a fast one to work in. I'll take the boring pattern used everywhere over the elegant one used once.",
   },
 ];
 
@@ -54,52 +87,44 @@ export default function PhilosophyPage() {
   return (
     <>
       <PageHero
-        eyebrow="Engineering Philosophy"
+        eyebrow="Index · Philosophy"
         title="Good software is honest, legible, and kind to the next person."
         description="I've spent enough time in other people's codebases to know what I want mine to feel like. These are the beliefs that survive contact with real deadlines — the principles I actually code by, not just the ones that sound good on a slide."
       />
 
-      {/* Engineering principles */}
-      <Section>
+      {/* 01 — Engineering principles: self-numbered, promoted to the gutter, orange-keyed */}
+      <Section index="01" label="Principles" rule>
         <Container>
           <SectionHeader
             eyebrow="Principles"
             title="The rules I keep coming back to"
             description="Not laws — defaults. They're the position I start from before a problem gives me a reason to move."
           />
-          <Reveal className="mt-10">
-            <ol className="grid gap-4 sm:grid-cols-2">
-              {principles.map((principle, index) => {
-                const Icon = principle.icon;
-                return (
-                  <li
-                    key={principle.title}
-                    className="group relative rounded-2xl border border-border bg-surface-1 p-6 transition-colors hover:border-border-strong"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="flex size-10 items-center justify-center rounded-xl bg-surface-2 text-primary">
-                        <Icon className="size-5" aria-hidden="true" />
-                      </span>
-                      <span className="font-mono text-xs text-foreground-subtle">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                    </div>
-                    <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-foreground">
-                      {principle.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
-                      {principle.body}
-                    </p>
-                  </li>
-                );
-              })}
-            </ol>
-          </Reveal>
+          <ol className="mt-12 space-y-12">
+            {principles.map((principle, index) => (
+              <li
+                key={principle.title}
+                className="grid gap-x-8 gap-y-4 md:grid-cols-[5rem_1fr] md:items-baseline"
+              >
+                <span className="font-mono tabular text-display-sm leading-none text-signal">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="font-display text-display-sm text-balance text-foreground">
+                    {principle.title}
+                  </h3>
+                  <p className="mt-3 max-w-[62ch] text-pretty text-foreground-muted">
+                    {principle.body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </Container>
       </Section>
 
-      {/* Architecture values */}
-      <Section className="bg-surface-1/40">
+      {/* 02 — Architecture (two-col) */}
+      <Section index="02" label="Architecture" rule className="bg-surface-1/40">
         <Container>
           <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
             <SectionHeader
@@ -118,16 +143,22 @@ export default function PhilosophyPage() {
                 I&apos;m wary of premature structure — a folder hierarchy invented before the
                 problem is understood is just a guess with extra steps. So I let architecture{" "}
                 <em>emerge</em>: start flat, watch where the friction collects, and refactor toward
-                the boundary the code is asking for. The goal isn&apos;t a clever diagram. It&apos;s
-                a system where the right change is also the easy change.
+                the boundary the code is asking for.
               </p>
+              <blockquote className="flex flex-col gap-5 pt-4">
+                <Rule signal />
+                <p className="max-w-[20ch] font-display text-display-md text-balance text-foreground">
+                  The goal isn&apos;t a clever diagram. It&apos;s a system where the right change is
+                  also the easy change.
+                </p>
+              </blockquote>
             </div>
           </div>
         </Container>
       </Section>
 
-      {/* Product thinking */}
-      <Section>
+      {/* 03 — Product thinking (two-col) */}
+      <Section index="03" label="Product" rule>
         <Container>
           <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
             <SectionHeader
@@ -155,53 +186,20 @@ export default function PhilosophyPage() {
         </Container>
       </Section>
 
-      {/* Performance mindset */}
-      <Section className="bg-surface-1/40">
+      {/* 04 — Performance mindset → datasheet definition rows */}
+      <Section index="04" label="Performance" rule className="bg-surface-1/40">
         <Container>
           <SectionHeader
             eyebrow="Performance"
             title="Speed is part of the design"
             description="A slow interface isn't a polished one with a flaw — it's a different, worse product."
           />
-          <div className="mt-8 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-2xl border border-border bg-surface-1 p-6">
-              <Gauge className="size-5 text-primary" aria-hidden="true" />
-              <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-foreground">
-                Budget, then build
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
-                I set a rough cost ceiling for a screen — bundle weight, main-thread work, network
-                round-trips — before I add to it. A budget turns &ldquo;is this fast?&rdquo; into a
-                question with an answer.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border bg-surface-1 p-6">
-              <Sparkles className="size-5 text-primary" aria-hidden="true" />
-              <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-foreground">
-                Animation has a price
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
-                Motion is something the device has to afford. I stay on the compositor, avoid
-                animating layout, and let go of an effect the moment it costs more than it gives.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border bg-surface-1 p-6">
-              <Target className="size-5 text-primary" aria-hidden="true" />
-              <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-foreground">
-                Measure on the slow device
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
-                The site is fast on my laptop by accident. What matters is the mid-range phone on a
-                flaky network — that&apos;s the user I tune for, because that&apos;s the user most
-                likely to be there.
-              </p>
-            </div>
-          </div>
+          <DefinitionList className="mt-10" items={performance} />
         </Container>
       </Section>
 
-      {/* Accessibility mindset */}
-      <Section>
+      {/* 05 — Accessibility (two-col) */}
+      <Section index="05" label="Access" rule>
         <Container>
           <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
             <SectionHeader
@@ -217,10 +215,10 @@ export default function PhilosophyPage() {
                 without a mouse it usually works for everyone.
               </p>
               <p>
-                I respect the signals people give their devices:
-                <code className="mx-1 rounded bg-surface-2 px-1.5 py-0.5 font-mono text-sm">
+                I respect the signals people give their devices:{" "}
+                <code className="border border-border px-1.5 py-0.5 font-code text-sm text-foreground">
                   prefers-reduced-motion
-                </code>
+                </code>{" "}
                 turns my animations off, contrast holds up in both themes, and focus is always
                 visible and never trapped. None of this is charity — it&apos;s just what
                 &ldquo;done&rdquo; means.
@@ -230,63 +228,20 @@ export default function PhilosophyPage() {
         </Container>
       </Section>
 
-      {/* Code quality beliefs */}
-      <Section className="bg-surface-1/40">
+      {/* 06 — Code quality beliefs → datasheet definition rows */}
+      <Section index="06" label="Quality" rule className="bg-surface-1/40">
         <Container>
           <SectionHeader
             eyebrow="Code quality"
             title="What I believe about good code"
             description="Quality isn't a coat of paint at the end. It's a hundred small choices made while no one's watching."
           />
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            {[
-              {
-                icon: Boxes,
-                title: "Names carry the design",
-                body: "If I can't name something cleanly, I usually don't understand it yet. A good name is a finished thought; a vague one is a deferred bug.",
-              },
-              {
-                icon: GitBranch,
-                title: "Types are documentation that can't lie",
-                body: "I lean on strict TypeScript to encode the rules of a system so the compiler enforces what a comment could only suggest.",
-              },
-              {
-                icon: Accessibility,
-                title: "Tests describe intent",
-                body: "I test behaviour, not implementation. A good test reads like a promise about what the code does — and stays true when the internals change.",
-              },
-              {
-                icon: Lightbulb,
-                title: "Consistency beats brilliance",
-                body: "A predictable codebase is a fast one to work in. I'll take the boring pattern used everywhere over the elegant one used once.",
-              },
-            ].map((belief) => {
-              const Icon = belief.icon;
-              return (
-                <div
-                  key={belief.title}
-                  className="flex gap-4 rounded-2xl border border-border bg-surface-1 p-6"
-                >
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-primary">
-                    <Icon className="size-5" aria-hidden="true" />
-                  </span>
-                  <div>
-                    <h3 className="font-display text-base font-semibold tracking-tight text-foreground">
-                      {belief.title}
-                    </h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-foreground-muted">
-                      {belief.body}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <DefinitionList className="mt-10" items={codeQuality} />
         </Container>
       </Section>
 
-      {/* Systems thinking */}
-      <Section>
+      {/* 07 — Systems thinking (two-col) */}
+      <Section index="07" label="Systems" rule>
         <Container>
           <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
             <SectionHeader
@@ -296,10 +251,6 @@ export default function PhilosophyPage() {
             />
             <div className="space-y-6 text-base leading-relaxed text-foreground-muted">
               <p>
-                <Network
-                  className="mr-2 inline size-5 align-text-bottom text-primary"
-                  aria-hidden="true"
-                />
                 I look for the layer where a decision can be made once — a design token, a shared
                 primitive, a single source of truth for routes — instead of re-deciding it in fifty
                 components that will inevitably drift apart. Consistency stops being a thing you
@@ -308,35 +259,45 @@ export default function PhilosophyPage() {
               <p>
                 That same lens applies past the code. I think about the whole life of a feature: how
                 it&apos;s discovered, how it fails, how it&apos;s observed in production, and how
-                the next person extends it. A change is rarely local — and designing as if it is, is
-                how systems quietly rot.
+                the next person extends it.
               </p>
+              <blockquote className="flex flex-col gap-5 pt-4">
+                <Rule signal />
+                <p className="max-w-[22ch] font-display text-display-md text-balance text-foreground">
+                  A change is rarely local — and designing as if it is, is how systems quietly rot.
+                </p>
+              </blockquote>
             </div>
           </div>
         </Container>
       </Section>
 
-      {/* Practical examples */}
-      <Section className="bg-surface-1/40">
+      {/* 08 — In practice: the one calibration moment (code section scan) */}
+      <Section index="08" label="In practice" rule className="bg-surface-1/40">
         <Container>
           <SectionHeader
             eyebrow="In practice"
             title="What this looks like in code"
             description="Principles are cheap. Here are two small patterns where the beliefs above turn into real lines I write."
           />
-          <div className="mt-10 grid gap-8 lg:grid-cols-2">
-            <div>
-              <h3 className="font-display text-lg font-semibold tracking-tight text-foreground">
-                Make failure explicit
-              </h3>
-              <p className="mt-2 mb-4 text-sm leading-relaxed text-foreground-muted">
-                A typed <code className="font-mono">Result</code> forces every caller to acknowledge
-                the unhappy path — no silent throws, no forgotten branch.
-              </p>
-              <CodeSnippet
-                filename="lib/result.ts"
-                language="ts"
-                code={`type Result<T, E = Error> =
+          <Calibration className="mt-10">
+            <div className="grid gap-8 lg:grid-cols-2">
+              <div>
+                <h3 className="font-display text-display-sm text-foreground">
+                  Make failure explicit
+                </h3>
+                <p className="mt-3 mb-4 text-pretty text-foreground-muted">
+                  A typed{" "}
+                  <code className="border border-border px-1.5 py-0.5 font-code text-sm text-foreground">
+                    Result
+                  </code>{" "}
+                  forces every caller to acknowledge the unhappy path — no silent throws, no
+                  forgotten branch.
+                </p>
+                <CodeSnippet
+                  filename="lib/result.ts"
+                  language="ts"
+                  code={`type Result<T, E = Error> =
   | { ok: true; value: T }
   | { ok: false; error: E };
 
@@ -352,20 +313,20 @@ async function loadProject(slug: string): Promise<Result<Project>> {
 const result = await loadProject(slug);
 if (!result.ok) return notFound();
 render(result.value);`}
-              />
-            </div>
-            <div>
-              <h3 className="font-display text-lg font-semibold tracking-tight text-foreground">
-                Motion is an enhancement
-              </h3>
-              <p className="mt-2 mb-4 text-sm leading-relaxed text-foreground-muted">
-                Animation layers on top of a working, accessible baseline — and steps aside entirely
-                when the user asks it to.
-              </p>
-              <CodeSnippet
-                filename="components/reveal.tsx"
-                language="tsx"
-                code={`export function Reveal({ children }: { children: ReactNode }) {
+                />
+              </div>
+              <div>
+                <h3 className="font-display text-display-sm text-foreground">
+                  Motion is an enhancement
+                </h3>
+                <p className="mt-3 mb-4 text-pretty text-foreground-muted">
+                  Animation layers on top of a working, accessible baseline — and steps aside
+                  entirely when the user asks it to.
+                </p>
+                <CodeSnippet
+                  filename="components/reveal.tsx"
+                  language="tsx"
+                  code={`export function Reveal({ children }: { children: ReactNode }) {
   const reducedMotion = useReducedMotion();
 
   // Respect the user's setting: render the content, skip the motion.
@@ -384,9 +345,10 @@ render(result.value);`}
     </motion.div>
   );
 }`}
-              />
+                />
+              </div>
             </div>
-          </div>
+          </Calibration>
         </Container>
       </Section>
 

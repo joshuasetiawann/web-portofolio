@@ -1,21 +1,32 @@
-// Accessible contact form: react-hook-form + zod client validation wired to the submitContact server action.
+// TRANSMISSION console — react-hook-form + zod client validation wired to the submitContact
+// server action. DATUM-styled: mono TX field labels, hairline bottom-rule inputs, and a
+// status-bar submit console (TRANSMIT / SENDING… / TX OK / TX FAIL) with an aria-live outcome.
+// The useActionState / zod / honeypot logic is unchanged from the accessible baseline.
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { m, AnimatePresence } from "framer-motion";
-import { CheckCircle2, AlertCircle, Loader2, Send } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { submitContact, initialContactState, type ContactFormState } from "@/actions/contact";
 import { FormField } from "@/components/forms/form-field";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Rule } from "@/components/layout/rule";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { DURATION, EASE } from "@/animations/easings";
 import { cn } from "@/lib/utils";
+
+// Hairline bottom-rule field: strips the box, keeps a single orange-on-focus underline.
+const HAIRLINE_FIELD =
+  "rounded-none border-0 border-b border-border bg-transparent px-0 focus-visible:border-signal";
+
+function pad3(n: number): string {
+  return String(n).padStart(3, "0");
+}
 
 export function ContactForm() {
   const [state, formAction, isPending] = useActionState<ContactFormState, FormData>(
@@ -25,6 +36,8 @@ export function ContactForm() {
 
   // Captured once on mount (lazy initializer); used by the server's anti-spam fill-time check.
   const [startedAt] = useState<number>(() => Date.now());
+  // Transmission tally — steps 000 → 001 → … on each accepted transmission.
+  const [txCount, setTxCount] = useState(0);
 
   const form = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
@@ -32,7 +45,7 @@ export function ContactForm() {
     defaultValues: { name: "", email: "", message: "", company: "" },
   });
 
-  // Reflect server-side outcomes back into the field state and reset on success.
+  // Reflect server-side outcomes back into the field state and reset/step on success.
   useEffect(() => {
     if (state.status === "error" && state.fieldErrors) {
       for (const [key, message] of Object.entries(state.fieldErrors)) {
@@ -41,6 +54,7 @@ export function ContactForm() {
     }
     if (state.status === "success") {
       form.reset();
+      setTxCount((n) => n + 1);
     }
   }, [state, form]);
 
@@ -58,11 +72,9 @@ export function ContactForm() {
   const isSuccess = state.status === "success";
   const isError = state.status === "error" && !!state.message;
 
-  // Motion is gated on the user's reduced-motion preference: transform + fade when
-  // allowed, opacity-only (or none) otherwise. transform/opacity only — no layout props.
+  // Motion is gated on the user's reduced-motion preference (opacity-only when reduced).
   const reduced = useReducedMotion();
-  const tapFeedback = reduced ? { opacity: 0.7 } : { scale: 0.97 };
-  const statusMotion = reduced
+  const outcomeMotion = reduced
     ? {
         initial: { opacity: 0 },
         animate: { opacity: 1 },
@@ -70,12 +82,12 @@ export function ContactForm() {
         transition: { duration: DURATION.fast },
       }
     : {
-        initial: { opacity: 0, y: 6 },
+        initial: { opacity: 0, y: 4 },
         animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -6 },
+        exit: { opacity: 0, y: -4 },
         transition: {
           duration: DURATION.base,
-          ease: [...EASE.out] as [number, number, number, number],
+          ease: [...EASE.snap] as [number, number, number, number],
         },
       };
 
@@ -84,10 +96,10 @@ export function ContactForm() {
       <form
         noValidate
         onSubmit={form.handleSubmit(onValid)}
-        className="flex flex-col gap-6 rounded-2xl border border-border bg-surface-1 p-6 sm:p-8"
+        className="flex flex-col gap-8"
         aria-busy={isPending}
       >
-        <FormField name="name" label="Name" required>
+        <FormField name="name" label="TX-01 · Name" required>
           {(field) => (
             <Input
               {...field}
@@ -96,11 +108,12 @@ export function ContactForm() {
               autoComplete="name"
               placeholder="Jane Doe"
               disabled={isPending}
+              className={HAIRLINE_FIELD}
             />
           )}
         </FormField>
 
-        <FormField name="email" label="Email" required>
+        <FormField name="email" label="TX-02 · Email" required>
           {(field) => (
             <Input
               {...field}
@@ -110,13 +123,14 @@ export function ContactForm() {
               autoComplete="email"
               placeholder="jane@example.com"
               disabled={isPending}
+              className={HAIRLINE_FIELD}
             />
           )}
         </FormField>
 
         <FormField
           name="message"
-          label="Message"
+          label="TX-03 · Message"
           required
           description="Tell me a little about your project, role, or question."
         >
@@ -126,7 +140,7 @@ export function ContactForm() {
               {...form.register("message")}
               rows={6}
               placeholder="What can I help you build?"
-              className="min-h-32 resize-y"
+              className={cn(HAIRLINE_FIELD, "min-h-32 resize-y")}
               disabled={isPending}
             />
           )}
@@ -144,63 +158,117 @@ export function ContactForm() {
           />
         </div>
 
-        <div className="flex flex-col gap-4">
-          <m.div
-            className="w-full sm:w-auto"
-            whileTap={isPending ? undefined : tapFeedback}
-            transition={{
-              duration: DURATION.fast,
-              ease: [...EASE.out] as [number, number, number, number],
-            }}
-          >
-            <Button type="submit" size="lg" disabled={isPending} className="w-full sm:w-auto">
-              {isPending ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                  Sending…
-                </>
-              ) : (
-                <>
-                  <Send aria-hidden="true" />
-                  Send message
-                </>
-              )}
-            </Button>
-          </m.div>
+        {/* Transmission console: status-bar-style submit + separate aria-live outcome. */}
+        <div className="flex flex-col gap-3">
+          <div className="relative overflow-hidden">
+            <Rule />
+
+            {/* On success one orange band sweeps top→bottom; on error the rule flashes once.
+                Purely decorative — the TX OK / TX FAIL text carries the meaning for AT. */}
+            {reduced ? null : (
+              <AnimatePresence>
+                {isSuccess ? (
+                  <m.span
+                    key="tx-sweep"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 bg-gradient-to-b from-transparent via-signal/30 to-transparent"
+                    initial={{ y: "-120%" }}
+                    animate={{ y: "260%" }}
+                    transition={{
+                      duration: 0.6,
+                      ease: [...EASE.gantry] as [number, number, number, number],
+                    }}
+                  />
+                ) : isError ? (
+                  <m.span
+                    key="tx-flash"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-signal"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 0.45, ease: "linear" }}
+                  />
+                ) : null}
+              </AnimatePresence>
+            )}
+
+            <div className="flex items-stretch font-mono tabular text-mono-status">
+              <button
+                type="submit"
+                disabled={isPending}
+                className="group flex flex-1 items-center gap-2 py-3 text-left text-foreground uppercase transition-colors hover:text-signal disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <span aria-hidden="true" className="text-signal">
+                  {">"}
+                </span>
+                {isPending ? (
+                  <>
+                    <Loader2 className="size-3.5 shrink-0 animate-spin" aria-hidden="true" />
+                    <span>SENDING…</span>
+                  </>
+                ) : (
+                  <span>TRANSMIT</span>
+                )}
+              </button>
+
+              <Rule orientation="vertical" className="h-auto self-stretch" />
+
+              <span className="flex items-center gap-1.5 px-3 uppercase" aria-hidden="true">
+                <span className="text-foreground-subtle">TX</span>
+                <span className={cn("text-foreground", isSuccess && "text-signal")}>
+                  {pad3(txCount)}
+                </span>
+              </span>
+            </div>
+          </div>
 
           {/* Persistent live region for the submission outcome. */}
-          <div aria-live="polite" role="status">
+          <div
+            aria-live="polite"
+            role="status"
+            className="min-h-[1.5rem] font-mono text-mono-status uppercase"
+          >
             <AnimatePresence initial={false} mode="wait">
               {isSuccess ? (
                 <m.p
-                  key="contact-success"
-                  className="flex items-start gap-2 text-sm font-medium text-success"
-                  initial={statusMotion.initial}
-                  animate={statusMotion.animate}
-                  exit={statusMotion.exit}
-                  transition={statusMotion.transition}
+                  key="tx-ok"
+                  className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
+                  initial={outcomeMotion.initial}
+                  animate={outcomeMotion.animate}
+                  exit={outcomeMotion.exit}
+                  transition={outcomeMotion.transition}
                 >
-                  <CheckCircle2 className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <span>{state.message}</span>
+                  <span className="text-signal">TX OK</span>
+                  <span aria-hidden="true" className="text-foreground-subtle">
+                    ·
+                  </span>
+                  <span className="font-sans text-sm tracking-normal text-foreground-muted normal-case">
+                    {state.message}
+                  </span>
                 </m.p>
               ) : isError ? (
                 <m.p
-                  key="contact-error"
-                  className="flex items-start gap-2 text-sm font-medium text-destructive"
-                  initial={statusMotion.initial}
-                  animate={statusMotion.animate}
-                  exit={statusMotion.exit}
-                  transition={statusMotion.transition}
+                  key="tx-fail"
+                  className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
+                  initial={outcomeMotion.initial}
+                  animate={outcomeMotion.animate}
+                  exit={outcomeMotion.exit}
+                  transition={outcomeMotion.transition}
                 >
-                  <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <span>{state.message}</span>
+                  <span className="text-destructive">TX FAIL</span>
+                  <span aria-hidden="true" className="text-foreground-subtle">
+                    ·
+                  </span>
+                  <span className="font-sans text-sm tracking-normal text-foreground-muted normal-case">
+                    {state.message}
+                  </span>
                 </m.p>
               ) : null}
             </AnimatePresence>
           </div>
         </div>
 
-        <p className={cn("text-xs text-foreground-subtle")}>
+        <p className="font-mono text-mono-meta text-foreground-subtle">
           Your details are used only to reply to your message and are never shared.
         </p>
       </form>

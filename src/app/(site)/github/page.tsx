@@ -1,22 +1,27 @@
+// GitHub — DATUM "THE INSTRUMENT PANEL": a stack of hairline modules, no cards/fills.
+// 01 Identity → 02 Vitals (DefinitionList + count-up) → 03 Repository ledger (REPO-###)
+// → 04 Language spectrum (all graphite, only the top language Signal Orange) → 05 Activity
+// log. Async data flow is unchanged; Error/Empty degrade to instrument fault readouts.
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { PageHero } from "@/components/sections/page-hero";
 import { CTASection } from "@/components/sections/cta-section";
 import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
 import { SectionHeader } from "@/components/layout/section-header";
-import { Reveal } from "@/components/motion/reveal";
-import { GitHubStatsCard } from "@/components/portfolio/github-stats-card";
-import { ContentCard } from "@/components/portfolio/content-card";
-import { ErrorState } from "@/components/shared/error-state";
-import { EmptyState } from "@/components/shared/empty-state";
+import { Rule } from "@/components/layout/rule";
+import { DefinitionList } from "@/components/layout/definition-list";
+import { LedgerList, LedgerRow } from "@/components/layout/ledger-row";
+import { Calibration } from "@/components/motion/calibration";
+import { TickCounter } from "@/components/motion/tick-counter";
 import { getGitHubUser, getGitHubRepos } from "@/lib/github";
 import { getTopRepos, getLanguageStats, summarizeRepoStats } from "@/lib/github-stats";
 import { buildMetadata } from "@/lib/metadata";
 import { ROUTES } from "@/constants/routes";
 import { formatDate } from "@/utils/format-date";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = buildMetadata({
   title: "GitHub",
@@ -24,6 +29,33 @@ export const metadata: Metadata = buildMetadata({
     "A live snapshot of my open-source activity — profile, repository highlights, language distribution, and recent commits straight from the GitHub API.",
   path: ROUTES.github,
 });
+
+// Instrument fault readout — a hairline panel that reports a data outage as telemetry.
+function FaultReadout({
+  code,
+  signal,
+  title,
+  description,
+  role,
+}: {
+  code: string;
+  signal: string;
+  title: string;
+  description: string;
+  role?: "alert";
+}) {
+  return (
+    <div role={role} className="border border-border p-8 sm:p-10">
+      <span className="inline-flex items-center gap-3 font-mono text-mono-label text-signal uppercase">
+        <Rule signal />
+        <span className="tabular">{code}</span>
+        <span className="text-foreground-subtle">· {signal}</span>
+      </span>
+      <p className="mt-5 font-display text-display-sm text-foreground">{title}</p>
+      <p className="mt-2 max-w-[720px] text-pretty text-foreground-muted">{description}</p>
+    </div>
+  );
+}
 
 export default async function GitHubPage() {
   const [user, repos] = await Promise.all([getGitHubUser(), getGitHubRepos()]);
@@ -36,11 +68,14 @@ export default async function GitHubPage() {
           title="Live from GitHub"
           description="Profile, repositories, and recent activity pulled directly from the GitHub API."
         />
-        <Section>
-          <Container>
-            <ErrorState
+        <Section index="01" label="Fault" rule>
+          <Container size="wide">
+            <FaultReadout
+              role="alert"
+              code="ERR 503"
+              signal="SIGNAL LOST"
               title="Could not load GitHub data"
-              description="The GitHub API is unavailable or rate-limited right now. Check back soon."
+              description="The GitHub API is unavailable or rate-limited right now. Telemetry will resume when the feed reconnects — check back soon."
             />
           </Container>
         </Section>
@@ -55,6 +90,14 @@ export default async function GitHubPage() {
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 5);
 
+  const vitals: { field: string; value: ReactNode }[] = [
+    { field: "Followers", value: <TickCounter value={user.followers} /> },
+    { field: "Following", value: <TickCounter value={user.following} /> },
+    { field: "Public repos", value: <TickCounter value={user.publicRepos} /> },
+    { field: "Total stars", value: <TickCounter value={summary.totalStars} /> },
+    { field: "Total forks", value: <TickCounter value={summary.totalForks} /> },
+  ];
+
   return (
     <>
       <PageHero
@@ -63,206 +106,175 @@ export default async function GitHubPage() {
         description="Profile, repositories, and recent activity pulled directly from the GitHub API."
       />
 
-      {/* Profile summary */}
-      <Section className="pt-0">
-        <Container>
-          <Reveal>
-            <div className="flex flex-col gap-6 rounded-2xl border border-border bg-surface-1 p-6 sm:flex-row sm:items-center sm:gap-8 sm:p-8">
-              <Image
-                src={user.avatarUrl}
-                alt={`${user.name}'s GitHub avatar`}
-                width={80}
-                height={80}
-                className="size-20 shrink-0 rounded-full border border-border"
-              />
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <h2 className="font-display text-2xl font-semibold tracking-tight text-foreground">
-                    {user.name}
-                  </h2>
-                  <span className="font-mono text-sm text-foreground-subtle">@{user.login}</span>
-                </div>
-                {user.bio ? (
-                  <p className="max-w-2xl text-sm text-pretty text-foreground-muted">{user.bio}</p>
-                ) : null}
-                <a
-                  href={user.htmlUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-foreground focus-visible:underline focus-visible:outline-none"
-                >
-                  View full profile
-                  <ArrowUpRight className="size-4" aria-hidden="true" />
-                  <span className="sr-only"> (opens in new tab)</span>
-                </a>
-              </div>
+      {/* 01 — Identity */}
+      <Section index="01" label="Identity" rule>
+        <Container size="wide">
+          <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
+            <Image
+              src={user.avatarUrl}
+              alt={`${user.name}'s GitHub avatar`}
+              width={112}
+              height={112}
+              className="size-28 shrink-0 rounded-none border border-border"
+            />
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-2 font-mono text-mono-eyebrow text-signal uppercase">
+                <Rule signal />
+                Identity
+              </span>
+              <h2 className="mt-3 font-display text-display-lg text-balance text-foreground">
+                {user.name}
+              </h2>
+              <p className="mt-1 font-mono tabular text-mono-meta text-foreground-subtle">
+                @{user.login}
+              </p>
+              {user.bio ? (
+                <p className="mt-4 max-w-[720px] text-pretty text-foreground-muted">{user.bio}</p>
+              ) : null}
+              <a
+                href={user.htmlUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex w-fit items-center gap-2 border border-border px-4 py-2.5 font-mono text-mono-label text-foreground uppercase transition-colors hover:border-border-strong hover:text-signal focus-visible:border-signal focus-visible:outline-none"
+              >
+                View profile →<span className="sr-only"> (opens in new tab)</span>
+              </a>
             </div>
-          </Reveal>
+          </div>
         </Container>
       </Section>
 
-      {/* Stats row */}
-      <Section className="pt-0">
-        <Container>
-          <SectionHeader eyebrow="At a glance" title="Profile statistics" />
-          <Reveal>
-            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-              <GitHubStatsCard
-                label="Followers"
-                value={user.followers.toLocaleString()}
-                icon="Users"
-              />
-              <GitHubStatsCard
-                label="Following"
-                value={user.following.toLocaleString()}
-                icon="User"
-              />
-              <GitHubStatsCard
-                label="Public repos"
-                value={user.publicRepos.toLocaleString()}
-                icon="FolderGit2"
-              />
-              <GitHubStatsCard
-                label="Total stars"
-                value={summary.totalStars.toLocaleString()}
-                icon="Star"
-              />
-              <GitHubStatsCard
-                label="Total forks"
-                value={summary.totalForks.toLocaleString()}
-                icon="GitFork"
-              />
-            </div>
-          </Reveal>
+      {/* 02 — Vitals */}
+      <Section index="02" label="Vitals" rule>
+        <Container size="wide">
+          <SectionHeader
+            eyebrow="Vitals"
+            title="Signal readout"
+            description="Live counts pulled from the GitHub API, tallied on load."
+          />
+          <Calibration className="mt-10">
+            <DefinitionList layout="grid" items={vitals} />
+          </Calibration>
         </Container>
       </Section>
 
-      {/* Repository highlights */}
-      <Section className="pt-0">
-        <Container>
+      {/* 03 — Repository ledger */}
+      <Section index="03" label="Repositories" rule>
+        <Container size="wide">
           <SectionHeader
             eyebrow="Repositories"
             title="Repository highlights"
-            description="A selection of my most-starred public repositories."
+            description="A selection of my most-starred public repositories, filed by stars."
           />
-          {repos.length === 0 ? (
-            <div className="mt-8">
-              <EmptyState
+          <div className="mt-10">
+            {topRepos.length === 0 ? (
+              <FaultReadout
+                code="NIL 000"
+                signal="NO SIGNAL"
                 title="No public repositories yet"
                 description="There are no public repositories to show right now. Check back soon."
               />
-            </div>
-          ) : (
-            <Reveal>
-              <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {topRepos.map((repo) => (
-                  <ContentCard
+            ) : (
+              <LedgerList
+                label="Repository highlights"
+                header={
+                  <>
+                    <span className="w-16 shrink-0">Index</span>
+                    <span className="min-w-0 flex-1">Repository · Stars · Forks · Language</span>
+                  </>
+                }
+              >
+                {topRepos.map((repo, i) => (
+                  <LedgerRow
                     key={repo.name}
+                    prefix="REPO"
+                    index={i + 1}
+                    title={repo.name}
                     href={repo.url}
                     external
-                    title={repo.name}
-                    description={repo.description}
-                    meta={`★ ${repo.stars.toLocaleString()}`}
-                    tags={repo.topics.slice(0, 3)}
+                    specs={[
+                      `★ ${repo.stars.toLocaleString("en-US")}`,
+                      `⑂ ${repo.forks.toLocaleString("en-US")}`,
+                      repo.language,
+                    ].filter(Boolean)}
                   />
                 ))}
-              </div>
-            </Reveal>
-          )}
+              </LedgerList>
+            )}
+          </div>
         </Container>
       </Section>
 
-      {/* Language distribution */}
+      {/* 04 — Language spectrum */}
       {languages.length > 0 ? (
-        <Section className="pt-0">
-          <Container>
+        <Section index="04" label="Languages" rule>
+          <Container size="wide">
             <SectionHeader
               eyebrow="Languages"
-              title="Language distribution"
-              description="The languages I reach for most across my public repositories."
+              title="Language spectrum"
+              description="Distribution across my public repositories — the dominant language holds the live trace."
             />
-            <Reveal>
-              <ul className="mt-8 flex flex-col gap-5 rounded-2xl border border-border bg-surface-1 p-6 sm:p-8">
-                {languages.map((language) => (
-                  <li key={language.name} className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="flex items-center gap-2 font-medium text-foreground">
-                        <span
-                          aria-hidden="true"
-                          className="size-2.5 rounded-full"
-                          style={{ backgroundColor: language.color }}
-                        />
-                        {language.name}
-                      </span>
-                      <span className="font-mono text-foreground-muted tabular-nums">
-                        {language.percentage}%
-                      </span>
-                    </div>
-                    <div
-                      className="h-2 w-full overflow-hidden rounded-full bg-surface-2"
-                      role="presentation"
-                    >
-                      <span
-                        className="block h-full rounded-full"
-                        style={{
-                          width: `${language.percentage}%`,
-                          backgroundColor: language.color,
-                        }}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+            <dl className="mt-10 border-t border-border">
+              {languages.map((language, i) => (
+                <div
+                  key={language.name}
+                  className="flex flex-col gap-2.5 border-b border-border py-4"
+                >
+                  <div className="flex items-baseline justify-between gap-4">
+                    <dt className="font-mono text-mono-label text-foreground uppercase">
+                      {language.name}
+                    </dt>
+                    <dd className="font-mono tabular text-mono-meta text-foreground-muted">
+                      {language.percentage}%
+                    </dd>
+                  </div>
+                  <div className="h-2 w-full" role="presentation">
+                    <span
+                      className={cn("block h-full", i === 0 ? "bg-signal" : "bg-rule")}
+                      style={{ width: `${language.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </dl>
           </Container>
         </Section>
       ) : null}
 
-      {/* Activity overview */}
+      {/* 05 — Activity log */}
       {recentRepos.length > 0 ? (
-        <Section className="pt-0">
-          <Container>
+        <Section index="05" label="Activity" rule>
+          <Container size="wide">
             <SectionHeader
               eyebrow="Activity"
-              title="Recently updated"
-              description="The repositories I've pushed to most recently."
+              title="Activity log"
+              description="The repositories I've pushed to most recently, timestamped."
             />
-            <Reveal>
-              <ul className="mt-8 flex flex-col divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface-1">
-                {recentRepos.map((repo) => (
-                  <li key={repo.name}>
-                    <a
-                      href={repo.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex flex-col gap-1 p-5 transition-colors hover:bg-surface-2 focus-visible:bg-surface-2 focus-visible:outline-none sm:flex-row sm:items-center sm:justify-between sm:gap-4"
-                    >
-                      <span className="flex flex-col gap-1">
-                        <span className="flex items-center gap-1.5 font-display text-base font-semibold text-foreground">
-                          {repo.name}
-                          <ArrowUpRight
-                            className="size-4 text-foreground-subtle opacity-0 transition-opacity group-hover:opacity-100"
-                            aria-hidden="true"
-                          />
-                          <span className="sr-only"> (opens in new tab)</span>
-                        </span>
-                        {repo.description ? (
-                          <span className="line-clamp-1 text-sm text-foreground-muted">
-                            {repo.description}
-                          </span>
-                        ) : null}
-                      </span>
-                      <span className="flex shrink-0 items-center gap-4 text-xs text-foreground-subtle">
-                        {repo.language ? <span className="font-mono">{repo.language}</span> : null}
-                        <time dateTime={repo.updatedAt} className="tabular-nums">
-                          {formatDate(repo.updatedAt)}
-                        </time>
-                      </span>
-                    </a>
-                  </li>
+            <div className="mt-10">
+              <LedgerList
+                label="Recently updated repositories"
+                header={
+                  <>
+                    <span className="w-16 shrink-0">Index</span>
+                    <span className="min-w-0 flex-1">Repository · Language · Detail</span>
+                    <span className="hidden md:block">Updated</span>
+                  </>
+                }
+              >
+                {recentRepos.map((repo, i) => (
+                  <LedgerRow
+                    key={repo.name}
+                    prefix="REPO"
+                    index={i + 1}
+                    title={repo.name}
+                    href={repo.url}
+                    external
+                    specs={[repo.language, repo.description].filter(Boolean)}
+                    timestamp={formatDate(repo.updatedAt)}
+                  />
                 ))}
-              </ul>
-            </Reveal>
+              </LedgerList>
+            </div>
           </Container>
         </Section>
       ) : null}

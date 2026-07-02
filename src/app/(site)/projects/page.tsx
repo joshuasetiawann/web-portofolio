@@ -1,4 +1,5 @@
-// Projects listing — featured case studies + a filterable grid of all work.
+// Projects index — DATUM "THE LEDGER": a collection-vitals readout above one
+// continuous hairline ledger of every project (PRJ-###), filed by project order.
 import type { Metadata } from "next";
 
 import { PageHero } from "@/components/sections/page-hero";
@@ -6,10 +7,11 @@ import { CTASection } from "@/components/sections/cta-section";
 import { Section } from "@/components/layout/section";
 import { Container } from "@/components/layout/container";
 import { SectionHeader } from "@/components/layout/section-header";
-import { FeaturedProjectCard } from "@/components/portfolio/featured-project-card";
-import { ProjectFilter } from "@/components/portfolio/project-filter";
-import { Reveal } from "@/components/motion/reveal";
-import { getAllProjects, getFeaturedProjects, projectCategories } from "@/data/projects";
+import { DefinitionList, type DefinitionItem } from "@/components/layout/definition-list";
+import { LedgerList, LedgerRow } from "@/components/layout/ledger-row";
+import { Calibration } from "@/components/motion/calibration";
+import { TickCounter } from "@/components/motion/tick-counter";
+import { getAllProjects, projectCategories } from "@/data/projects";
 import { buildMetadata } from "@/lib/metadata";
 import { ROUTES } from "@/constants/routes";
 
@@ -20,46 +22,80 @@ export const metadata: Metadata = buildMetadata({
   path: ROUTES.projects,
 });
 
+const STATUS_LABEL: Record<string, string> = {
+  live: "Live",
+  archived: "Archived",
+  wip: "In progress",
+};
+
 export default function ProjectsPage() {
-  const featured = getFeaturedProjects();
   const all = getAllProjects();
+  const liveCount = all.filter((project) => project.status === "live").length;
+  const featuredCount = all.filter((project) => project.featured).length;
+
+  const vitals: DefinitionItem[] = [
+    { field: "Total", value: <TickCounter value={all.length} /> },
+    { field: "Live", value: <TickCounter value={liveCount} /> },
+    { field: "Featured", value: <TickCounter value={featuredCount} /> },
+    { field: "Categories", value: <TickCounter value={projectCategories.length} /> },
+  ];
 
   return (
     <>
       <PageHero
-        eyebrow="Work"
+        eyebrow="Index · PRJ"
         title="Selected Projects"
         description="Case studies spanning design systems, real-time web apps, immersive WebGL, and open-source tooling — each built to be fast, accessible, and considered."
       />
 
-      {featured.length > 0 ? (
-        <Section>
-          <Container>
-            <SectionHeader
-              eyebrow="Featured"
-              title="Highlighted case studies"
-              description="A closer look at the work I'm most proud of."
-            />
-            <div className="mt-10 flex flex-col gap-8">
-              {featured.map((project, index) => (
-                <Reveal key={project.slug} delay={Math.min(index, 4) * 0.05}>
-                  <FeaturedProjectCard project={project} />
-                </Reveal>
-              ))}
-            </div>
-          </Container>
-        </Section>
-      ) : null}
+      <Section index="01" label="Summary">
+        <Container>
+          <SectionHeader
+            eyebrow="Register"
+            title="Collection vitals"
+            description="The catalogue at a glance — counts read out on calibration."
+          />
+          <Calibration className="mt-10">
+            <DefinitionList items={vitals} layout="grid" />
+          </Calibration>
+        </Container>
+      </Section>
 
-      <Section>
+      <Section index="02" label="Index" rule>
         <Container>
           <SectionHeader
             eyebrow="All work"
-            title="Browse every project"
-            description="Filter by category to narrow the list."
+            title="Project ledger"
+            description="Every project, filed by index. Hover a row to trace it."
           />
           <div className="mt-10">
-            <ProjectFilter projects={all} categories={projectCategories} />
+            <LedgerList
+              label="All projects"
+              header={
+                <>
+                  <span className="w-16 shrink-0">Index</span>
+                  <span className="min-w-0 flex-1">Project · Stack · Year · Role</span>
+                  <span className="hidden md:block">Category · Status</span>
+                  <span>Metric</span>
+                </>
+              }
+            >
+              {all.map((project) => {
+                const firstMetric = project.metrics?.[0];
+                return (
+                  <LedgerRow
+                    key={project.slug}
+                    prefix="PRJ"
+                    index={project.order}
+                    title={project.title}
+                    href={`${ROUTES.projects}/${project.slug}`}
+                    coordinate={`${project.category} · ${STATUS_LABEL[project.status] ?? project.status}`}
+                    specs={[project.stack.join(" / "), String(project.year), project.role]}
+                    metric={firstMetric ? { value: firstMetric.value } : undefined}
+                  />
+                );
+              })}
+            </LedgerList>
           </div>
         </Container>
       </Section>

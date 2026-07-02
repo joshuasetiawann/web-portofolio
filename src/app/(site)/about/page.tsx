@@ -1,17 +1,19 @@
+// About — DATUM "PAPER DATASHEET": long-form prose on a prose measure, oversized
+// flush-left pull-quotes, gutter footnote indices. AvailabilityBadge+SocialLinks collapse
+// into a mono status line; technical-identity StatCards → DefinitionList metric tiles;
+// values → flush-left numbered entries (†0N). One calibration: a pull-quote scan.
 import type { Metadata } from "next";
-import { Compass, Gauge, HeartHandshake, Layers, ShieldCheck, Sparkles } from "lucide-react";
 
 import { PageHero } from "@/components/sections/page-hero";
 import { CTASection } from "@/components/sections/cta-section";
 import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
 import { SectionHeader } from "@/components/layout/section-header";
-import { Reveal } from "@/components/motion/reveal";
-import { AvailabilityBadge } from "@/components/common/availability-badge";
-import { SocialLinks } from "@/components/common/social-links";
-import { StatCard } from "@/components/common/stat-card";
-import { TechStackList } from "@/components/portfolio/tech-stack-list";
+import { DefinitionList } from "@/components/layout/definition-list";
+import { Rule } from "@/components/layout/rule";
+import { Calibration } from "@/components/motion/calibration";
 import { skills } from "@/data/skills";
+import { socialLinks } from "@/data/social-links";
 import { buildMetadata } from "@/lib/metadata";
 import { ROUTES } from "@/constants/routes";
 
@@ -25,54 +27,84 @@ export const metadata: Metadata = buildMetadata({
 
 const values = [
   {
-    icon: Compass,
     title: "Clarity over cleverness",
     body: "The best code reads like an explanation. I optimise for the next person to open the file — often a future version of myself — and treat a confusing abstraction as a bug, not a flex.",
   },
   {
-    icon: ShieldCheck,
     title: "Accessibility is non-negotiable",
     body: "Semantic HTML, keyboard paths, focus states, and reduced-motion support aren't a final pass. They're load-bearing decisions I make while the component is still a sketch.",
   },
   {
-    icon: Gauge,
     title: "Performance is a feature",
     body: "A beautiful interface that stutters has already failed. I budget for the main thread, ship the smallest sensible bundle, and treat every animation as something the device has to afford.",
   },
   {
-    icon: Layers,
     title: "Systems, not screens",
     body: "I'd rather build the tokens, primitives, and patterns once and compose them everywhere. Consistency falls out for free when the system is the source of truth.",
   },
   {
-    icon: HeartHandshake,
     title: "Build with people in mind",
     body: "Software is a conversation with whoever uses it and whoever maintains it. I write for both audiences and assume good code is a courtesy, not a given.",
   },
   {
-    icon: Sparkles,
     title: "Craft is in the details",
     body: "The 50ms of easing, the empty state nobody asked for, the focus ring that lands exactly right — the small, unglamorous details are usually what make a product feel considered.",
   },
+];
+
+// Technical-identity spec tiles (formerly StatCards) — data-as-decoration.
+const identity = [
+  { field: "Core focus", value: "Front-end" },
+  { field: "Primary language", value: "TypeScript" },
+  { field: "Specialty", value: "Motion & 3D" },
+  { field: "Bias", value: "Accessible" },
 ];
 
 export default function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow="About"
+        eyebrow="Index · About"
         title="I build interfaces that feel as good as they look."
         description="I'm Joshua Setiawan — a creative developer and software engineer drawn to the space where rigorous engineering meets expressive design. I care about the pixels and the architecture in equal measure."
         actions={
-          <>
-            <AvailabilityBadge available label="Open to new work" />
-            <SocialLinks />
-          </>
+          <div className="flex flex-col gap-4 font-mono text-mono-status uppercase">
+            <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <span className="text-foreground-subtle">Status</span>
+              <span aria-hidden="true" className="text-foreground-subtle">
+                /
+              </span>
+              <span className="text-signal">Open</span>
+              <span aria-hidden="true" className="text-foreground-subtle">
+                ·
+              </span>
+              <span className="text-foreground-muted normal-case">Open to new work</span>
+            </p>
+            <ul
+              aria-label="Social links"
+              className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-foreground-subtle"
+            >
+              {socialLinks.map((link) => {
+                const external = /^https?:\/\//.test(link.href);
+                return (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="transition-colors hover:text-signal"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         }
       />
 
-      {/* Intro / personal story */}
-      <Section>
+      {/* 01 — Intro / personal story */}
+      <Section index="01" label="Story" rule>
         <Container size="prose">
           <SectionHeader eyebrow="The story" title="How I got here" />
           <div className="mt-8 space-y-5 text-base leading-relaxed text-foreground-muted sm:text-lg">
@@ -97,44 +129,30 @@ export default function AboutPage() {
               design and engineering — where the answer has to be correct <em>and</em> feel good.
             </p>
           </div>
+
+          {/* The one calibration moment: an oversized pull-quote the scan sweeps once. */}
+          <Calibration className="mt-14">
+            <blockquote className="flex flex-col gap-6 py-2">
+              <Rule signal />
+              <p className="max-w-[20ch] font-display text-display-md text-balance text-foreground">
+                Imagine something, make it real on a screen, and watch a person reach through the
+                glass and actually use it.
+              </p>
+            </blockquote>
+          </Calibration>
         </Container>
       </Section>
 
-      {/* Technical identity */}
-      <Section className="bg-surface-1/40">
+      {/* 02 — Technical identity */}
+      <Section index="02" label="Identity" rule className="bg-surface-1/40">
         <Container>
           <SectionHeader
             eyebrow="Technical identity"
             title="A front-end engineer who thinks in systems"
             description="I live closest to the interface, but I care about the whole path a request takes to get there — and the whole life a component lives after I ship it."
           />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard
-              label="Core focus"
-              value="Front-end"
-              icon="Code2"
-              description="React, Next.js, and the design systems that hold them together."
-            />
-            <StatCard
-              label="Primary language"
-              value="TypeScript"
-              icon="FileText"
-              description="Strict mode, expressive types, failures made explicit."
-            />
-            <StatCard
-              label="Specialty"
-              value="Motion & 3D"
-              icon="Sparkles"
-              description="Three.js and shaders, used with restraint and a performance budget."
-            />
-            <StatCard
-              label="Bias"
-              value="Accessible"
-              icon="ShieldCheck"
-              description="Inclusive, keyboard-first interfaces — by default, not by request."
-            />
-          </div>
-          <div className="mt-8 max-w-3xl text-base leading-relaxed text-foreground-muted">
+          <DefinitionList className="mt-10" layout="grid" items={identity} />
+          <div className="mt-10 max-w-[720px] text-base leading-relaxed text-foreground-muted">
             <p>
               In practice that means I&apos;m the person who&apos;ll obsess over the shape of a prop
               API and the curve of an easing function in the same afternoon. I think of an interface
@@ -145,66 +163,58 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      {/* Values */}
-      <Section>
+      {/* 03 — Values → flush-left numbered footnote entries */}
+      <Section index="03" label="Values" rule>
         <Container>
           <SectionHeader
             eyebrow="What I value"
             title="The principles I don't compromise on"
             description="Tools and trends rotate. These are the things that stay constant in how I work."
           />
-          <Reveal className="mt-10">
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {values.map((value) => {
-                const Icon = value.icon;
-                return (
-                  <li
-                    key={value.title}
-                    className="group rounded-2xl border border-border bg-surface-1 p-6 transition-colors hover:border-border-strong"
-                  >
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-surface-2 text-primary">
-                      <Icon className="size-5" aria-hidden="true" />
-                    </span>
-                    <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-foreground">
-                      {value.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
-                      {value.body}
-                    </p>
-                  </li>
-                );
-              })}
-            </ul>
-          </Reveal>
+          <ol className="mt-12 space-y-10 sm:space-y-12">
+            {values.map((value, index) => (
+              <li key={value.title} className="grid gap-x-8 gap-y-3 sm:grid-cols-[auto_1fr]">
+                <span className="font-mono tabular text-mono-label text-foreground-subtle">
+                  &dagger;{String(index + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="font-display text-display-sm text-balance text-foreground">
+                    {value.title}
+                  </h3>
+                  <p className="mt-3 max-w-[60ch] text-pretty text-foreground-muted">
+                    {value.body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </Container>
       </Section>
 
-      {/* Skills */}
-      <Section className="bg-surface-1/40">
+      {/* 04 — Toolbox → datasheet definition rows */}
+      <Section index="04" label="Toolbox" rule className="bg-surface-1/40">
         <Container>
           <SectionHeader
             eyebrow="Toolbox"
             title="What I reach for"
             description="A working set, not a wishlist — these are the tools I use often enough to have strong opinions about."
           />
-          <div className="mt-10 grid gap-8 sm:grid-cols-2">
-            {skills.map((group) => (
-              <div
-                key={group.category}
-                className="rounded-2xl border border-border bg-surface-1 p-6"
-              >
-                <h3 className="font-mono text-xs tracking-[0.2em] text-foreground-subtle uppercase">
-                  {group.category}
-                </h3>
-                <TechStackList stack={group.items} className="mt-4" />
-              </div>
-            ))}
-          </div>
+          <DefinitionList
+            className="mt-10"
+            items={skills.map((group) => ({
+              field: group.category,
+              value: (
+                <span className="font-mono text-mono-body text-foreground-muted">
+                  {group.items.join("  /  ")}
+                </span>
+              ),
+            }))}
+          />
         </Container>
       </Section>
 
-      {/* Working style */}
-      <Section>
+      {/* 05 — Working style (two-col, asymmetric) */}
+      <Section index="05" label="Method" rule>
         <Container>
           <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
             <SectionHeader
@@ -232,8 +242,8 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      {/* Beyond code / personality */}
-      <Section className="bg-surface-1/40">
+      {/* 06 — Beyond code / personality */}
+      <Section index="06" label="Off-clock" rule className="bg-surface-1/40">
         <Container size="prose">
           <SectionHeader
             eyebrow="Off the clock"
@@ -254,11 +264,19 @@ export default function AboutPage() {
               function for the third time, it&apos;s probably not because it&apos;s broken —
               it&apos;s because it could be clearer.
             </p>
-            <p>
-              Mostly, I like making things that feel good to use and being honest about the parts
-              that don&apos;t yet. That&apos;s the whole job, really.
-            </p>
           </div>
+
+          <blockquote className="mt-14 flex flex-col gap-6">
+            <Rule signal />
+            <p className="max-w-[22ch] font-display text-display-md text-balance text-foreground">
+              Mostly, I like making things that{" "}
+              <span className="text-signal">feel good to use</span> — and being honest about the
+              parts that don&apos;t yet.
+            </p>
+            <footer className="font-mono text-mono-label text-foreground-subtle uppercase">
+              — that&apos;s the whole job, really
+            </footer>
+          </blockquote>
         </Container>
       </Section>
 

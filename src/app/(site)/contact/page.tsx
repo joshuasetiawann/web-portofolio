@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Clock, Mail, ShieldCheck } from "lucide-react";
 
-import { PageHero } from "@/components/sections/page-hero";
 import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
-import { Reveal } from "@/components/motion/reveal";
+import { Rule } from "@/components/layout/rule";
+import { DefinitionList } from "@/components/layout/definition-list";
+import { Calibration } from "@/components/motion/calibration";
 import { ContactForm } from "@/components/forms/contact-form";
-import { AvailabilityBadge } from "@/components/common/availability-badge";
 import { SocialLinks } from "@/components/common/social-links";
-import { ExternalLink } from "@/components/shared/external-link";
 import { JsonLd } from "@/components/shared/json-ld";
 import { buildMetadata } from "@/lib/metadata";
 import { absoluteUrl } from "@/lib/seo";
@@ -42,84 +40,77 @@ export default function ContactPage() {
     <>
       <JsonLd data={contactJsonLd} />
 
-      <PageHero
-        eyebrow="Contact"
-        title="Let’s build something"
-        description="Tell me about your project, your team, or the problem you're trying to solve. I read every message and reply personally."
-      />
-
-      <Section className="pt-0">
+      {/* Hero — the transmission title (one word rationed to Signal Orange). */}
+      <Section index="01" label="TRANSMISSION" className="pb-0">
         <Container>
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
-            {/* Form */}
-            <Reveal>
-              <ContactForm />
-            </Reveal>
+          <Calibration className="flex flex-col items-start gap-6">
+            <span className="inline-flex items-center gap-3 font-mono text-mono-eyebrow text-signal uppercase">
+              <Rule signal />
+              <span className="tabular text-foreground-subtle">TX</span>
+              <span>Transmission</span>
+            </span>
 
-            {/* Aside */}
-            <Reveal delay={0.05}>
-              <aside className="flex flex-col gap-8">
-                <AvailabilityBadge className="w-fit" />
+            <h1 className="font-display text-display-xl text-balance text-foreground">
+              Let&rsquo;s <span className="text-signal">talk.</span>
+            </h1>
 
-                <div className="flex flex-col gap-4">
-                  <h2 className="font-display text-lg font-semibold text-foreground">
-                    Other ways to reach me
-                  </h2>
-                  <ul className="flex flex-col gap-3 text-sm">
-                    <li className="flex items-start gap-3">
-                      <span
-                        aria-hidden="true"
-                        className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-primary"
+            <p className="max-w-[720px] text-body-lg text-pretty text-foreground-muted">
+              Tell me about your project, your team, or the problem you&rsquo;re trying to solve. I
+              read every message and reply personally — usually within 1&ndash;2 business days.
+            </p>
+          </Calibration>
+        </Container>
+      </Section>
+
+      {/* Channel — transmission form + instrument aside. */}
+      <Section index="02" label="CHANNEL" rule>
+        <Container>
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
+            {/* Left: the transmission form. */}
+            <ContactForm />
+
+            {/* Right: mono instrument aside. */}
+            <aside className="flex flex-col gap-8">
+              <h2 className="sr-only">Contact details</h2>
+
+              <p className="font-mono tabular text-mono-status uppercase">
+                <span className="text-foreground-subtle">STATUS: </span>
+                <span className="text-signal">OPEN</span>
+              </p>
+
+              <DefinitionList
+                items={[
+                  {
+                    field: "Email",
+                    value: (
+                      <a
+                        href={`mailto:${siteConfig.links.email}`}
+                        className="font-mono text-foreground-muted underline-offset-4 transition-colors hover:text-signal hover:underline"
                       >
-                        <Mail className="size-4" />
-                      </span>
-                      <span className="flex flex-col">
-                        <span className="font-medium text-foreground">Email</span>
-                        <ExternalLink
-                          href={`mailto:${siteConfig.links.email}`}
-                          className="text-foreground-muted"
-                        >
-                          {siteConfig.links.email}
-                        </ExternalLink>
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span
-                        aria-hidden="true"
-                        className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-primary"
-                      >
-                        <Clock className="size-4" />
-                      </span>
-                      <span className="flex flex-col">
-                        <span className="font-medium text-foreground">Response time</span>
-                        <span className="text-foreground-muted">
-                          Usually within 1–2 business days.
-                        </span>
-                      </span>
-                    </li>
-                  </ul>
-                </div>
+                        {siteConfig.links.email}
+                      </a>
+                    ),
+                  },
+                  { field: "Latency", value: "1–2 business days" },
+                  {
+                    field: "Channels",
+                    value: <SocialLinks size="sm" className="mt-1" />,
+                  },
+                ]}
+              />
 
-                <div className="flex flex-col gap-3">
-                  <h2 className="font-display text-lg font-semibold text-foreground">
-                    Find me online
-                  </h2>
-                  <SocialLinks />
-                </div>
-
-                <p className="flex items-start gap-2 border-t border-border pt-6 text-xs text-foreground-subtle">
-                  <ShieldCheck className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                  <span>
-                    Your details are used only to reply to your message and are never shared or
-                    added to a mailing list. Prefer a different channel? Reach out via{" "}
-                    <Link href={ROUTES.github} className="underline-offset-4 hover:underline">
-                      GitHub
-                    </Link>
-                    .
-                  </span>
-                </p>
-              </aside>
-            </Reveal>
+              <p className="border-t border-border pt-6 font-mono text-mono-meta text-foreground-subtle">
+                Your details are used only to reply to your message — never shared, never added to a
+                list. Prefer another channel? Reach out via{" "}
+                <Link
+                  href={ROUTES.github}
+                  className="text-foreground-muted underline-offset-4 transition-colors hover:text-signal hover:underline"
+                >
+                  GitHub
+                </Link>
+                .
+              </p>
+            </aside>
           </div>
         </Container>
       </Section>
