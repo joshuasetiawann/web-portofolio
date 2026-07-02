@@ -3,6 +3,7 @@
 // gutter ticks between gated blocks, the media figure as the one calibration moment, and
 // metrics that count up once.
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -16,6 +17,7 @@ import { DefinitionList, type DefinitionItem } from "@/components/layout/definit
 import { GutterIndex } from "@/components/layout/gutter-index";
 import { Rule } from "@/components/layout/rule";
 import { LedgerList, LedgerRow } from "@/components/layout/ledger-row";
+import { CoverPlate } from "@/components/portfolio/cover-plate";
 import { TechStackList } from "@/components/portfolio/tech-stack-list";
 import { Calibration } from "@/components/motion/calibration";
 import { TickCounter } from "@/components/motion/tick-counter";
@@ -264,7 +266,14 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
           <Container>
             <SectionHeader eyebrow="Media" title="A look inside" />
             <Calibration className="mt-10">
-              <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {/* A lone figure spans the full measure — a half-filled 2-col grid reads as a hole. */}
+              <ul
+                className={
+                  project.media.length > 1
+                    ? "grid grid-cols-1 gap-6 sm:grid-cols-2"
+                    : "grid grid-cols-1 gap-6"
+                }
+              >
                 {project.media.map((item, index) => (
                   <li key={`${item.alt}-${index}`}>
                     <figure className="border border-border bg-surface-1">
@@ -273,10 +282,17 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                         aria-label={item.alt}
                         className="relative aspect-[16/10] w-full bg-surface-1"
                       >
-                        <div
-                          aria-hidden="true"
-                          className="h-full w-full bg-[linear-gradient(to_right,var(--grid-line)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-line)_1px,transparent_1px)] bg-[size:32px_32px]"
-                        />
+                        {item.src && item.type !== "video" ? (
+                          <Image
+                            src={item.src}
+                            alt=""
+                            fill
+                            sizes="(min-width: 640px) 50vw, 100vw"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <CoverPlate prefix="FIG" index={index + 1} label={project.title} />
+                        )}
                       </div>
                       {item.caption ? (
                         <figcaption className="border-t border-border px-4 py-3 font-mono text-mono-meta text-foreground-muted">

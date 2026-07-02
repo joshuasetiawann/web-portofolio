@@ -7,6 +7,7 @@ import { m, type Variants } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { CoverPlate } from "@/components/portfolio/cover-plate";
 import { DURATION, EASE } from "@/animations/easings";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -57,10 +58,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               className="object-cover"
             />
           ) : (
-            <div
-              aria-hidden="true"
-              className="h-full w-full border border-border bg-surface-1 bg-[linear-gradient(to_right,var(--grid-line)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-line)_1px,transparent_1px)] bg-[size:28px_28px]"
-            />
+            <CoverPlate prefix="PRJ" index={project.order} label={project.category} />
           )}
         </m.div>
 
