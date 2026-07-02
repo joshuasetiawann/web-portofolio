@@ -12,6 +12,10 @@ export interface ViewportSize {
 
 let cache: ViewportSize = { w: 0, h: 0 };
 
+// Stable reference: React calls getServerSnapshot repeatedly during hydration and
+// compares with Object.is — a fresh object each call trips its infinite-loop guard.
+const SERVER_SNAPSHOT: ViewportSize = { w: 0, h: 0 };
+
 function subscribe(callback: () => void): () => void {
   if (typeof window === "undefined") return () => {};
   window.addEventListener("resize", callback, { passive: true });
@@ -27,7 +31,7 @@ function getSnapshot(): ViewportSize {
 }
 
 function getServerSnapshot(): ViewportSize {
-  return { w: 0, h: 0 };
+  return SERVER_SNAPSHOT;
 }
 
 export function useViewportSize(): ViewportSize {
