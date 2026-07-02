@@ -1,5 +1,5 @@
-// Sample professional experience data for the portfolio.
-// Placeholder sample data — replace with real content (see docs/CONTENT-CHECKLIST.md)
+// Professional experience data for the portfolio.
+// Honest, self-directed track record — verifiable through github.com/joshuasetiawann.
 
 export interface ExperienceItem {
   role: string;
@@ -14,45 +14,48 @@ export interface ExperienceItem {
 
 export const experience: ExperienceItem[] = [
   {
-    role: "Senior Frontend Engineer",
-    company: "Lumen Labs",
-    start: "2023-06",
+    role: "Independent AI & Systems Engineer",
+    company: "Self-directed R&D",
+    start: "2025-05",
     end: "Present",
-    location: "Remote",
+    location: "Indonesia · Remote",
     summary:
-      "Lead the web platform team building immersive, performance-first product experiences.",
+      "Full-time deep work across the stack: a from-scratch operating system, local-first AI platforms, and a provider-agnostic coding agent.",
     highlights: [
-      "Shipped a token-driven design system adopted across four product surfaces.",
-      "Reduced Largest Contentful Paint by 38% through streaming and image strategy.",
-      "Mentored three engineers and established the team's accessibility review process.",
+      "Wrote THUOS, a bootable x86 kernel in C + assembly — 20 releases from VGA text to a USB-driven truecolor desktop, boot-verified in QEMU CI.",
+      "Built AllHaven (v4.1) and ThuAI: local-first AI platforms with multi-agent workflows, self-hosted PostgreSQL, and human-in-the-loop approval.",
+      "Started RelayCLI, a pipx-installable terminal coding agent that works with six model providers through LiteLLM.",
+      "Trained and shipped YOLOv8 computer-vision pipelines for image, video, and live webcam detection.",
     ],
-    stack: ["TypeScript", "Next.js", "React", "Tailwind CSS", "Framer Motion"],
+    stack: ["Python", "C", "FastAPI", "Next.js", "PostgreSQL", "Ollama", "QEMU"],
   },
   {
-    role: "Creative Developer",
-    company: "Studio Northwind",
-    start: "2021-01",
-    end: "2023-05",
-    location: "Jakarta, ID",
+    role: "Freelance Software Developer",
+    company: "Business applications",
+    start: "2026-06",
+    end: "Present",
+    location: "Indonesia",
     summary:
-      "Built award-considered marketing sites blending WebGL, motion, and editorial storytelling.",
+      "Production web apps that real businesses run on daily — inventory, sales, and company-profile systems, several live on Vercel.",
     highlights: [
-      "Delivered 12+ launch sites with bespoke scroll and 3D interactions.",
-      "Introduced a shared animation toolkit that halved project setup time.",
+      "Gudang Atomy: warehouse box tracking with QR scanning, printable labels, Supabase RLS, and a full audit history — in production.",
+      "HL: a cash-basis sales & receivables app with decimal-safe rupiah math, settlement rules, and PDF reporting.",
+      "Prime Property & Nexora AI: a premium agency platform with a role-based agent portal, and a two-sided AI-model marketplace.",
     ],
-    stack: ["Three.js", "GSAP", "React Three Fiber", "Lenis"],
+    stack: ["TypeScript", "Next.js", "Supabase", "Prisma", "PostgreSQL", "Tailwind CSS"],
   },
   {
-    role: "Software Engineer Intern",
-    company: "Vertex Systems",
-    start: "2020-06",
-    end: "2020-12",
-    location: "Bandung, ID",
-    summary: "Contributed to internal tooling and data dashboards used by the operations team.",
+    role: "Web Developer",
+    company: "Early projects",
+    start: "2024-11",
+    end: "2025-05",
+    location: "Indonesia",
+    summary:
+      "First shipped work: company-profile sites, a PHP + MySQL e-commerce platform, and IoT experiments — where the habit of building real, running things started.",
     highlights: [
-      "Built a reusable charting module consumed by five internal dashboards.",
-      "Automated a manual reporting workflow, saving roughly six hours weekly.",
+      "Built a security-conscious PHP/MySQL storefront with an admin panel and prepared statements end to end.",
+      "Shipped company-profile websites and early automation/IoT prototypes.",
     ],
-    stack: ["TypeScript", "React", "Node.js", "PostgreSQL"],
+    stack: ["PHP", "MySQL", "JavaScript", "HTML/CSS", "Arduino"],
   },
 ];

@@ -1,55 +1,61 @@
 // Research data + accessors for the /research page.
-// Placeholder sample data — replace with real content (see docs/CONTENT-CHECKLIST.md)
+// Self-published engineering writing — design docs from the THUOS repo, readable on GitHub.
 import type { Research } from "@/types/research";
+
+const THUOS_DOCS = "https://github.com/joshuasetiawann/THUNITY-OS/blob/main/docs";
 
 export const research: Research[] = [
   {
-    slug: "perceptual-color-dark-ui",
-    title: "Perceptual Color Scales for Dark Interfaces",
+    slug: "ai-native-os-foundation",
+    title: "An AI-Native Foundation for a General-Purpose OS",
     abstract:
-      "An exploration of OKLCH-based color ramps that preserve contrast and perceived brightness across dark and light themes without manual per-step tuning.",
-    date: "2025-04-10",
+      "Design notes for building AI into an operating system as a first-class kernel service: an in-kernel AI service/model/task core with permissions and audit, exposed through an `ai` shell namespace — specified and host-tested before any inference runs in kernel space.",
+    date: "2026-06-20",
     authors: ["Joshua Setiawan"],
-    venue: "Self-published",
-    status: "preprint",
-    category: "Design Engineering",
-    tags: ["Color", "Accessibility", "OKLCH"],
+    venue: "THUOS engineering docs",
+    status: "published",
+    category: "Operating Systems",
+    tags: ["OS Design", "AI", "Kernel"],
     featured: true,
     readingStatus: "implemented",
     links: {
-      pdf: "https://example.com/research/perceptual-color.pdf",
-      code: "https://github.com/joshuasetiawan/oklch-ramps",
+      pdf: `${THUOS_DOCS}/39_AI_NATIVE_GENERAL_OS_FOUNDATION.md`,
+      code: "https://github.com/joshuasetiawann/THUNITY-OS",
     },
   },
   {
-    slug: "gpu-particle-scheduling",
-    title: "Frame-Budget Scheduling for GPU Particle Systems",
+    slug: "thunity-ai-bridge-strategy",
+    title: "THUNITY AI Bridge Strategy",
     abstract:
-      "A practical study of how to keep large instanced particle systems within a frame budget on mobile GPUs using on-demand rendering and adaptive DPR.",
-    date: "2024-11-22",
-    authors: ["Joshua Setiawan", "A. Rahman"],
-    status: "wip",
-    category: "Graphics",
-    tags: ["WebGL", "Performance", "Shaders"],
+      "How a freestanding kernel with no networking or Python can still get real AI assistance: a staged bridge design connecting THUOS to host-side inference, with explicit trust boundaries and a design-only first phase.",
+    date: "2026-06-22",
+    authors: ["Joshua Setiawan"],
+    venue: "THUOS engineering docs",
+    status: "published",
+    category: "Operating Systems",
+    tags: ["OS Design", "AI", "Architecture"],
     featured: true,
     readingStatus: "exploring",
-    links: { code: "https://github.com/joshuasetiawan/particle-budget" },
+    links: {
+      pdf: `${THUOS_DOCS}/40_THUNITY_AI_BRIDGE_STRATEGY.md`,
+      code: "https://github.com/joshuasetiawann/THUNITY-OS",
+    },
   },
   {
-    slug: "crdt-presence-channels",
-    title: "Separating Document and Presence Channels in CRDT Editors",
+    slug: "thuos-reality-check",
+    title: "THUOS Reality Check",
     abstract:
-      "Notes on why splitting the conflict-free document stream from the ephemeral presence stream improves both latency and reliability in collaborative editors.",
-    date: "2024-06-30",
+      "An honest audit of what the kernel actually does versus what it claims: boot verification methodology, what 'working' means for each subsystem, and the gap between a demo and a daily driver.",
+    date: "2026-06-15",
     authors: ["Joshua Setiawan"],
-    venue: "Engineering notes",
+    venue: "THUOS engineering docs",
     status: "published",
-    category: "Distributed Systems",
-    tags: ["Realtime", "CRDT", "Architecture"],
+    category: "Operating Systems",
+    tags: ["Verification", "Testing", "Kernel"],
     readingStatus: "implemented",
     links: {
-      doi: "https://doi.org/10.0000/example",
-      pdf: "https://example.com/research/crdt-presence.pdf",
+      pdf: `${THUOS_DOCS}/THUOS_REALITY_CHECK.md`,
+      code: "https://github.com/joshuasetiawann/THUNITY-OS",
     },
   },
 ];
