@@ -4,20 +4,22 @@ import { SITE_DESCRIPTION, SITE_NAME } from "@/constants/site";
 
 export const defaultMetadataConfig = {
   titleTemplate: "%s — Joshua Setiawan",
-  defaultTitle: `${SITE_NAME} — Creative Developer & Software Engineer`,
+  defaultTitle: `${SITE_NAME} — AI Engineer & Software Developer`,
   description: SITE_DESCRIPTION,
   keywords: [
     "Joshua Setiawan",
-    "Creative Developer",
-    "Software Engineer",
-    "Frontend Engineer",
+    "AI Engineer",
+    "Software Developer",
+    "Machine Learning",
+    "Computer Vision",
+    "YOLOv8",
+    "OS Development",
+    "Linux",
     "Portfolio",
+    "Python",
     "Next.js",
-    "React",
     "TypeScript",
-    "WebGL",
-    "Three.js",
-    "Interactive Design",
+    "IoT",
   ],
 } as const;
 

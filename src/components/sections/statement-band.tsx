@@ -16,8 +16,8 @@ export function StatementBand({ className }: { className?: string }) {
 
         <blockquote className="mt-8">
           <p className="max-w-[22ch] font-display text-display-md text-balance text-foreground md:text-display-lg">
-            Immersion is a <span className="text-signal">frame around the work</span> — never a
-            substitute for it. Every flourish earns its place, or it gets cut.
+            I don&apos;t ship what I <span className="text-signal">can&apos;t explain</span> — from
+            kernel space to the browser, understanding is the real deliverable.
           </p>
           <footer className="mt-8 font-mono text-mono-label text-foreground-subtle uppercase">
             — how I approach every build

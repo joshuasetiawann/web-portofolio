@@ -8,7 +8,7 @@ export const alt = siteConfig.title;
 
 export default function Image() {
   return renderOgImage({
-    eyebrow: "Creative Developer · Software Engineer",
+    eyebrow: "AI Engineer · Software Developer",
     title: siteConfig.name,
     subtitle: "Immersive, performant, accessible software — design and engineering in one.",
   });

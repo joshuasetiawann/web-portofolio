@@ -20,44 +20,44 @@ import { ROUTES } from "@/constants/routes";
 export const metadata: Metadata = buildMetadata({
   title: "About",
   description:
-    "I'm Joshua Setiawan — a creative developer and software engineer who builds fast, accessible, and quietly ambitious interfaces. Here's how I think, what I value, and the tools I reach for.",
+    "I'm Joshua Setiawan — an AI engineer and software developer who builds intelligent systems, from a from-scratch x86 kernel to local-first AI platforms. Here's how I think, what I value, and the tools I reach for.",
   path: ROUTES.about,
   type: "profile",
 });
 
 const values = [
   {
-    title: "Clarity over cleverness",
-    body: "The best code reads like an explanation. I optimise for the next person to open the file — often a future version of myself — and treat a confusing abstraction as a bug, not a flex.",
+    title: "Understand it, then build it",
+    body: "I don't ship what I can't explain. Before a line of code, I want the why — the datasheet, the protocol, the algorithm underneath. Writing a kernel from scratch is the extreme version of a habit I apply everywhere.",
   },
   {
-    title: "Accessibility is non-negotiable",
-    body: "Semantic HTML, keyboard paths, focus states, and reduced-motion support aren't a final pass. They're load-bearing decisions I make while the component is still a sketch.",
+    title: "Verify, don't assume",
+    body: '"It should work" isn\'t a status. THUOS boots in CI on every push, money math in my sales app is unit-tested to the decimal, and a screenshot of the real running thing beats a promise every time.',
+  },
+  {
+    title: "Local-first, user-owned",
+    body: "Your data shouldn't have to leave your machine to be useful. AllHaven and ThuAI both run their AI against a database the user owns — and any cloud call is explicit, labelled, and approved by a human.",
   },
   {
     title: "Performance is a feature",
-    body: "A beautiful interface that stutters has already failed. I budget for the main thread, ship the smallest sensible bundle, and treat every animation as something the device has to afford.",
+    body: "From a cooperative scheduler in kernel space to a frame budget in the browser, the discipline is the same: measure, budget, and treat every cycle as something the machine has to afford.",
   },
   {
-    title: "Systems, not screens",
-    body: "I'd rather build the tokens, primitives, and patterns once and compose them everywhere. Consistency falls out for free when the system is the source of truth.",
+    title: "Ship real things",
+    body: "A repo with a README, screenshots of the actual app, a live URL where it makes sense — projects are done when someone else can run them, not when the idea is interesting.",
   },
   {
-    title: "Build with people in mind",
-    body: "Software is a conversation with whoever uses it and whoever maintains it. I write for both audiences and assume good code is a courtesy, not a given.",
-  },
-  {
-    title: "Craft is in the details",
-    body: "The 50ms of easing, the empty state nobody asked for, the focus ring that lands exactly right — the small, unglamorous details are usually what make a product feel considered.",
+    title: "Function deserves good form",
+    body: "I'm a systems person who cares how things look. A warehouse tracker gets a proper design system; an OS gets a themed desktop. If people have to use it, it should feel considered.",
   },
 ];
 
 // Technical-identity spec tiles (formerly StatCards) — data-as-decoration.
 const identity = [
-  { field: "Core focus", value: "Front-end" },
-  { field: "Primary language", value: "TypeScript" },
-  { field: "Specialty", value: "Motion & 3D" },
-  { field: "Bias", value: "Accessible" },
+  { field: "Core focus", value: "AI & systems" },
+  { field: "Languages", value: "Python · TS · C" },
+  { field: "Specialty", value: "Agents & CV" },
+  { field: "Daily driver", value: "Arch Linux" },
 ];
 
 export default function AboutPage() {
@@ -65,8 +65,8 @@ export default function AboutPage() {
     <>
       <PageHero
         eyebrow="Index · About"
-        title="I build interfaces that feel as good as they look."
-        description="I'm Joshua Setiawan — a creative developer and software engineer drawn to the space where rigorous engineering meets expressive design. I care about the pixels and the architecture in equal measure."
+        title="I build intelligent systems, from bare metal to the browser."
+        description="I'm Joshua Setiawan — an AI engineer and software developer from Indonesia. I've written an x86 kernel from scratch, built local-first AI platforms, trained vision models, and shipped production web apps. What connects them: I like knowing exactly how things work."
         actions={
           <div className="flex flex-col gap-4 font-mono text-mono-status uppercase">
             <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
@@ -109,24 +109,25 @@ export default function AboutPage() {
           <SectionHeader eyebrow="The story" title="How I got here" />
           <div className="mt-8 space-y-5 text-base leading-relaxed text-foreground-muted sm:text-lg">
             <p>
-              I started where a lot of developers do — view-source on a page that felt like magic,
-              then an evening that turned into a decade of asking &ldquo;but how does <em>that</em>{" "}
-              work?&rdquo; What hooked me wasn&apos;t any single language. It was the loop: imagine
-              something, make it real on a screen, and watch a person reach through the glass and
-              actually use it.
+              I started with the web — company profiles, an e-commerce build in plain PHP — and kept
+              pulling on the thread of &ldquo;but how does <em>that</em> work?&rdquo; That question
+              took me from websites down to IoT boards, into computer vision with YOLOv8, and
+              eventually all the way to the bottom of the stack: an operating system written from
+              scratch in C and assembly, because the only way to really understand a machine is to
+              boot your own code on it.
             </p>
             <p>
-              Over time my taste sharpened in two directions at once. I fell for the expressive side
-              of the web — motion, depth, the kind of detail that makes an interface feel alive —
-              and equally for the unglamorous discipline underneath it: types that hold, boundaries
-              that make sense, and code that still reads cleanly six months later. I&apos;ve never
-              accepted that you have to choose between the two.
+              Along the way I went deep on Linux — Arch with a tiled Hyprland setup is home — and
+              the terminal became my primary interface. That comfort with the low level is exactly
+              what makes the high level click: when you&apos;ve scheduled tasks in kernel space, an
+              async runtime stops being magic; when you&apos;ve parsed a USB descriptor, an API
+              contract is just another datasheet.
             </p>
             <p>
-              Today I build production interfaces for the web, lean on TypeScript and React the way
-              other people lean on muscle memory, and spend a suspicious amount of time getting a
-              single transition to feel right. I&apos;m happiest on problems that are equal parts
-              design and engineering — where the answer has to be correct <em>and</em> feel good.
+              Today my center of gravity is AI engineering: local-first AI platforms with
+              multi-agent workflows, a provider-agnostic terminal coding agent, and vision models
+              that actually run. I&apos;m happiest on problems where intelligence meets systems —
+              where the answer has to be correct, fast, <em>and</em> private.
             </p>
           </div>
 
@@ -135,8 +136,7 @@ export default function AboutPage() {
             <blockquote className="flex flex-col gap-6 py-2">
               <Rule signal />
               <p className="max-w-[20ch] font-display text-display-md text-balance text-foreground">
-                Imagine something, make it real on a screen, and watch a person reach through the
-                glass and actually use it.
+                Build fast. Ship faster. Stay curious.
               </p>
             </blockquote>
           </Calibration>
@@ -148,16 +148,16 @@ export default function AboutPage() {
         <Container>
           <SectionHeader
             eyebrow="Technical identity"
-            title="A front-end engineer who thinks in systems"
-            description="I live closest to the interface, but I care about the whole path a request takes to get there — and the whole life a component lives after I ship it."
+            title="A builder who works the whole stack"
+            description="Kernel space to user space, model weights to UI states — I care about the entire path a request takes, because I've built most of the layers it crosses at least once."
           />
           <DefinitionList className="mt-10" layout="grid" items={identity} />
           <div className="mt-10 max-w-[720px] text-base leading-relaxed text-foreground-muted">
             <p>
-              In practice that means I&apos;m the person who&apos;ll obsess over the shape of a prop
-              API and the curve of an easing function in the same afternoon. I think of an interface
-              as a system of states, not a static composition — empty, loading, error, and success
-              all deserve to be designed, and the gaps between them are where the craft hides.
+              In practice that means I&apos;m the person who&apos;ll debug an xHCI interrupt in the
+              morning and tune a design token in the afternoon. I think in systems: an app is states
+              and boundaries, an AI agent is a loop with permissions, an OS is the same idea with
+              fewer safety nets. The layers differ; the discipline doesn&apos;t.
             </p>
           </div>
         </Container>
@@ -224,18 +224,17 @@ export default function AboutPage() {
             />
             <div className="space-y-6 text-base leading-relaxed text-foreground-muted">
               <p>
-                I start by getting something on the screen as fast as honestly possible — a rough
-                but real slice I can click through — because nothing clarifies a problem like a
-                working version of the wrong answer. From there I iterate in small, reviewable steps
-                rather than disappearing for a week and surfacing with a monolith.
+                I build in staged, versioned increments — THUOS grew through twenty releases from
+                VGA text to a USB-driven desktop, and my agent CLI ships stage by stage the same
+                way. Each slice is small enough to verify honestly: boot it, click it, measure it.
+                Nothing clarifies a problem like a working version of the wrong answer.
               </p>
               <p>
-                I lean on types and tests as a conversation with my future self, write commit
-                messages I&apos;d want to read, and treat code review as the main event, not a
-                formality. I&apos;d rather over-communicate a tradeoff up front than defend a
-                surprise later. And when something feels off — a slow transition, an awkward API, a
-                state I can&apos;t name — I&apos;ve learned to trust that instinct and dig in rather
-                than ship around it.
+                I automate the checking — CI that actually boots the kernel, unit tests on the money
+                math, screenshots of the real running app in every README — because &ldquo;works on
+                my machine&rdquo; isn&apos;t evidence. And when something feels off, I&apos;ve
+                learned to dig for the root cause instead of shipping around it; the bug you
+                understand once is the class of bug you never ship again.
               </p>
             </div>
           </div>
@@ -252,26 +251,25 @@ export default function AboutPage() {
           />
           <div className="mt-8 space-y-5 text-base leading-relaxed text-foreground-muted sm:text-lg">
             <p>
-              A lot of my taste comes from outside the editor. I&apos;m drawn to well-made things in
-              general — typography, industrial design, films that respect their audience — and I
-              notice the same instinct that makes a good interface in all of them: restraint,
-              intention, and a point of view.
+              Off the clock usually still means a terminal. I rice my Linux setup more than I&apos;d
+              like to admit, wire up IoT experiments, and keep a side project running purely to
+              learn something new — the OS started exactly that way. The line between
+              &ldquo;hobby&rdquo; and &ldquo;work&rdquo; is mostly which repo I have open.
             </p>
             <p>
-              I read widely about how teams build software, tinker with side projects that exist
-              purely to learn something new, and genuinely enjoy explaining hard ideas in plain
-              language. If you catch me deep in a shader playground or rewriting a perfectly fine
-              function for the third time, it&apos;s probably not because it&apos;s broken —
-              it&apos;s because it could be clearer.
+              I&apos;m also building real tools for real people close to me — warehouse tracking and
+              sales apps that a family business actually runs on. Shipping for users who sit across
+              the dinner table is its own kind of code review: honest, immediate, and impossible to
+              ignore.
             </p>
           </div>
 
           <blockquote className="mt-14 flex flex-col gap-6">
             <Rule signal />
             <p className="max-w-[22ch] font-display text-display-md text-balance text-foreground">
-              Mostly, I like making things that{" "}
-              <span className="text-signal">feel good to use</span> — and being honest about the
-              parts that don&apos;t yet.
+              Mostly, I like building things{" "}
+              <span className="text-signal">from first principles</span> — and being honest about
+              the parts I don&apos;t understand yet.
             </p>
             <footer className="font-mono text-mono-label text-foreground-subtle uppercase">
               — that&apos;s the whole job, really

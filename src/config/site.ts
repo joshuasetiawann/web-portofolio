@@ -6,18 +6,16 @@ import { SITE_DESCRIPTION, SITE_LOCALE, SITE_NAME, SITE_SHORT_NAME } from "@/con
 export const siteConfig = {
   name: SITE_NAME,
   shortName: SITE_SHORT_NAME,
-  title: `${SITE_NAME} — Creative Developer & Software Engineer`,
+  title: `${SITE_NAME} — AI Engineer & Software Developer`,
   description: SITE_DESCRIPTION,
   url: env.NEXT_PUBLIC_SITE_URL,
   locale: SITE_LOCALE,
   author: {
     name: SITE_NAME,
-    jobTitle: "Creative Developer & Software Engineer",
+    jobTitle: "AI Engineer & Software Developer",
   },
   links: {
-    github: "https://github.com/joshuasetiawan",
-    linkedin: "https://www.linkedin.com/in/joshuasetiawan",
-    twitter: "https://twitter.com/joshuasetiawan",
+    github: "https://github.com/joshuasetiawann",
     email: "thunityai@gmail.com",
   },
 } as const;

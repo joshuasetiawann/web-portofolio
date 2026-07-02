@@ -36,21 +36,21 @@ export const metadata = buildMetadata({ path: "/" });
 const PRINCIPLES = [
   {
     eyebrow: "01",
-    title: "Performance is a feature",
+    title: "Understand, then build",
     description:
-      "Core Web Vitals are a design constraint, not an afterthought. Every interaction earns its frame budget on a mid-range phone.",
+      "From USB datasheets to model weights, I build from first principles — the fastest path to something that works is knowing exactly why it works.",
   },
   {
     eyebrow: "02",
-    title: "Accessible by default",
+    title: "Verify, don't assume",
     description:
-      "Semantic markup, keyboard paths, and reduced-motion fallbacks ship from day one — not bolted on before launch.",
+      "My OS boots in CI on every push; my money math is unit-tested to the decimal. Evidence over optimism, in every layer of the stack.",
   },
   {
     eyebrow: "03",
-    title: "Systems over screens",
+    title: "Local-first by default",
     description:
-      "Token-driven design systems and typed data layers keep large surfaces consistent, themeable, and cheap to evolve.",
+      "AI platforms that run against a database you own, with every risky action gated behind human approval. Privacy is architecture, not a setting.",
   },
 ];
 
@@ -75,7 +75,7 @@ export default function HomePage() {
       field: "Building since",
       value: (
         <span className="inline-flex items-baseline gap-1.5">
-          <TickCounter value={5} />
+          <TickCounter value={2} />
           <span className="text-mono-label text-foreground-subtle">+ YRS</span>
         </span>
       ),
@@ -122,7 +122,7 @@ export default function HomePage() {
         name: siteConfig.name,
         url: siteConfig.url,
         jobTitle: siteConfig.author.jobTitle,
-        sameAs: [siteConfig.links.github, siteConfig.links.linkedin, siteConfig.links.twitter],
+        sameAs: [siteConfig.links.github],
       },
       {
         "@type": "WebSite",

@@ -39,8 +39,8 @@ export function Hero() {
             </p>
 
             <p className="mt-6 max-w-xl text-body-lg text-pretty text-foreground-muted">
-              I build interfaces where rigorous engineering meets expressive design — fast,
-              accessible, quietly ambitious software, and the occasional thing that moves.
+              I build intelligent systems — from a bootable x86 kernel written from scratch to
+              multi-agent AI platforms — combining performance with thoughtful user experience.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">

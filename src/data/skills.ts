@@ -1,5 +1,4 @@
-// Sample skills data grouped by category for the portfolio.
-// Placeholder sample data — replace with real content (see docs/CONTENT-CHECKLIST.md)
+// Skill groups for the portfolio, mirroring the real toolkit on github.com/joshuasetiawann.
 
 export interface SkillGroup {
   category: string;
@@ -9,18 +8,22 @@ export interface SkillGroup {
 export const skills: SkillGroup[] = [
   {
     category: "Languages",
-    items: ["TypeScript", "JavaScript", "Python", "GLSL", "SQL"],
+    items: ["Python", "TypeScript", "JavaScript", "C", "C++", "PHP", "SQL", "x86 Assembly"],
   },
   {
-    category: "Frameworks & Libraries",
-    items: ["React", "Next.js", "Three.js", "React Three Fiber", "Node.js"],
+    category: "AI / ML & Computer Vision",
+    items: ["PyTorch", "TensorFlow", "YOLOv8", "OpenCV", "scikit-learn", "Ollama", "LiteLLM"],
   },
   {
-    category: "Styling & Motion",
-    items: ["Tailwind CSS", "Framer Motion", "GSAP", "Lenis"],
+    category: "Web & Backend",
+    items: ["Next.js", "React", "FastAPI", "Node.js", "Tailwind CSS", "Astro", "Prisma"],
   },
   {
-    category: "Tooling & Platforms",
-    items: ["Git", "Vite", "Vercel", "Storybook", "Docker"],
+    category: "Data & Infrastructure",
+    items: ["PostgreSQL", "Supabase", "MySQL", "Docker", "Vercel", "n8n"],
+  },
+  {
+    category: "Systems & Hardware",
+    items: ["Linux (Arch)", "QEMU", "Bash", "Git", "Arduino", "Raspberry Pi"],
   },
 ];

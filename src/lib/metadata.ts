@@ -8,9 +8,6 @@ import { defaultMetadataConfig } from "@/config/seo";
 import { absoluteUrl } from "@/lib/seo";
 import { env } from "@/lib/env";
 
-// Twitter cards expect an @handle, not a profile URL.
-const twitterHandle = `@${siteConfig.links.twitter.replace(/\/+$/, "").split("/").pop()}`;
-
 export const rootMetadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
   title: {
@@ -35,8 +32,6 @@ export const rootMetadata: Metadata = {
     card: "summary_large_image",
     title: defaultMetadataConfig.defaultTitle,
     description: defaultMetadataConfig.description,
-    creator: twitterHandle,
-    site: twitterHandle,
   },
   robots: {
     index: true,
@@ -87,8 +82,6 @@ export function buildMetadata(input: BuildMetadataInput = {}): Metadata {
       card: "summary_large_image",
       title: title ?? defaultMetadataConfig.defaultTitle,
       description,
-      creator: twitterHandle,
-      site: twitterHandle,
     },
   };
 }

@@ -78,8 +78,6 @@ export const footerNav: NavSection[] = [
     title: "Connect",
     items: [
       { label: "GitHub", href: siteConfig.links.github, icon: "Github" },
-      { label: "LinkedIn", href: siteConfig.links.linkedin, icon: "Linkedin" },
-      { label: "Twitter", href: siteConfig.links.twitter, icon: "Twitter" },
       {
         label: "Email",
         href: `mailto:${siteConfig.links.email}`,

@@ -1,5 +1,4 @@
-// Sample social link data for the portfolio.
-// Placeholder sample data — replace with real content (see docs/CONTENT-CHECKLIST.md)
+// Social link data for the portfolio.
 // `icon` values map to lucide-react icon names.
 
 export interface SocialLink {
@@ -11,18 +10,8 @@ export interface SocialLink {
 export const socialLinks: SocialLink[] = [
   {
     label: "GitHub",
-    href: "https://github.com/joshua",
+    href: "https://github.com/joshuasetiawann",
     icon: "Github",
-  },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/in/joshua",
-    icon: "Linkedin",
-  },
-  {
-    label: "Twitter",
-    href: "https://twitter.com/joshua",
-    icon: "Twitter",
   },
   {
     label: "Email",
