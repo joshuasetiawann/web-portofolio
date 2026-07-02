@@ -48,7 +48,7 @@ export function CalibrationField({ count = 1600 }: CalibrationFieldProps) {
         size={0.03}
         sizeAttenuation
         transparent
-        color="#ff4a1c"
+        color="#6e8bff"
         depthWrite={false}
         opacity={0.95}
         blending={AdditiveBlending}

@@ -1,9 +1,10 @@
 /**
  * DATUM design tokens — INSTRUMENT (dark, default) / DATASHEET (light).
- * ONE acid: Signal Orange, rationed at the token layer.
+ * ONE acid: Signal Blue (cold, blue→violet), rationed at the token layer.
  * Elevation = hairline --border + z-order. No fills/glass/shadow/gradient.
  * Deprecated tokens kept & neutralized to prevent build breaks.
- * Canonical hexes & contrast ratios: docs/superpowers/specs/2026-07-01-datum-redesign-design.md §2.
+ * Layout & structure spec: docs/superpowers/specs/2026-07-01-datum-redesign-design.md §2
+ * (that doc's hexes are the original Signal-Orange values; the cold palette below supersedes them).
  */
 
 /* =============== LIGHT — DATASHEET =============== */
@@ -14,8 +15,8 @@
   --card-foreground: #16151a;
   --popover: #ffffff;
   --popover-foreground: #16151a;
-  --primary: #a62a06; /* = --signal */
-  --primary-foreground: #ffffff; /* 7.1:1 on primary */
+  --primary: #3441c4; /* = --signal */
+  --primary-foreground: #ffffff; /* 7.8:1 on primary */
   --secondary: #e4e1d7;
   --secondary-foreground: #16151a;
   --muted: #e4e1d7;
@@ -26,7 +27,7 @@
   --destructive-foreground: #ffffff;
   --border: #cdcabf;
   --input: #b3afa2;
-  --ring: #a62a06;
+  --ring: #3441c4;
 
   --surface-1: #f4f2ec;
   --surface-2: #ffffff;
@@ -35,10 +36,10 @@
   --foreground-subtle: #75736b; /* 4.0:1 — large/UI only */
   --border-strong: #b3afa2;
 
-  --signal: #a62a06; /* text-safe acid: 6.0:1 */
-  --signal-hover: #8a2405;
+  --signal: #3441c4; /* text-safe acid: 6.5:1 */
+  --signal-hover: #2a35a8;
   --signal-foreground: #ffffff;
-  --signal-display: #e23a10; /* large display marks only: 3.6:1 */
+  --signal-display: #4553e8; /* large display marks only: 4.8:1 */
 
   /* aliases (chassis) */
   --rule: var(--border);
@@ -46,9 +47,9 @@
   --grid-line: var(--border);
 
   /* instrument chrome */
-  --scan: #a62a06;
-  --trace: #a62a06;
-  --rule-accent: #a62a06;
+  --scan: #3441c4;
+  --trace: #3441c4;
+  --rule-accent: #3441c4;
   --status-bar-bg: #f4f2ec;
   --status-bar-foreground: #55534c;
 
@@ -60,7 +61,7 @@
   /* deprecated — neutralized (do NOT introduce a 2nd accent) */
   --accent-2: #55534c;
   --accent-2-foreground: #ffffff;
-  --glow: #e23a10; /* feeds ONLY hero trace emissive */
+  --glow: #4553e8; /* feeds ONLY hero trace emissive */
   --success: #1b6e45; /* toasts/console log-levels only */
   --warning: #8a5d0f;
   --info: #1f5f82;
@@ -78,8 +79,8 @@
   --card-foreground: #f1efe9;
   --popover: #17171b;
   --popover-foreground: #f1efe9;
-  --primary: #ff4a1c;
-  --primary-foreground: #0d0d0f; /* 5.8:1 on primary */
+  --primary: #6e8bff;
+  --primary-foreground: #0d0d0f; /* 6.3:1 on primary */
   --secondary: #17171b;
   --secondary-foreground: #f1efe9;
   --muted: #17171b;
@@ -90,7 +91,7 @@
   --destructive-foreground: #0d0d0f;
   --border: #2a2a2f;
   --input: #3a3a40;
-  --ring: #ff4a1c;
+  --ring: #6e8bff;
 
   --surface-1: #131316;
   --surface-2: #17171b;
@@ -99,24 +100,24 @@
   --foreground-subtle: #6c6a64;
   --border-strong: #3a3a40;
 
-  --signal: #ff4a1c;
-  --signal-hover: #ff6a3d;
+  --signal: #6e8bff;
+  --signal-hover: #8aa3ff;
   --signal-foreground: #0d0d0f;
-  --signal-display: #ff4a1c; /* large marks reuse signal (5.8:1 ok large) */
+  --signal-display: #6e8bff; /* large marks reuse signal (6.3:1 ok large) */
 
   --rule: var(--border);
   --rule-strong: var(--border-strong);
   --grid-line: var(--border);
 
-  --scan: #ff4a1c;
-  --trace: #ff4a1c;
-  --rule-accent: #ff4a1c;
+  --scan: #6e8bff;
+  --trace: #6e8bff;
+  --rule-accent: #6e8bff;
   --status-bar-bg: #131316;
   --status-bar-foreground: #9c9a92;
 
   --accent-2: #9c9a92;
   --accent-2-foreground: #0d0d0f;
-  --glow: #ff4a1c;
+  --glow: #6e8bff;
   --success: #63c48a;
   --warning: #d8a23c;
   --info: #5aa9d6;

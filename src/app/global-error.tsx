@@ -15,7 +15,7 @@ export default function GlobalError({
 }) {
   const mono = '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
   const sans = '"Archivo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
-  const signal = "#FF4A1C";
+  const signal = "#6E8BFF";
   const bone = "#F1EFE9";
   const muted = "#9C9A92";
   const subtle = "#6C6A64";
