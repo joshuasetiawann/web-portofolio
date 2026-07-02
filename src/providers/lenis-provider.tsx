@@ -17,7 +17,13 @@ export function LenisProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (reducedMotion) return;
 
-    const instance = new Lenis({ duration: 1.1, smoothWheel: true });
+    // Geared, not floaty — a higher lerp makes scroll feel mechanical (DATUM).
+    const instance = new Lenis({
+      lerp: 0.14,
+      wheelMultiplier: 1,
+      smoothWheel: true,
+      syncTouch: false,
+    });
     // eslint-disable-next-line react-hooks/set-state-in-effect -- store the externally-created Lenis instance so it propagates through context
     setLenis(instance);
 

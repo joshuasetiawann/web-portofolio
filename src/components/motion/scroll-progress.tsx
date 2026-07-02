@@ -22,7 +22,7 @@ export function ScrollProgress({ className }: ScrollProgressProps) {
 
   return (
     <m.div
-      className={cn("fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-primary", className)}
+      className={cn("fixed inset-x-0 top-0 z-50 h-px origin-left bg-signal", className)}
       style={{ scaleX: progress }}
       role="progressbar"
       aria-label="Page scroll progress"

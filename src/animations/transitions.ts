@@ -1,5 +1,5 @@
 // Reusable Framer Motion transition presets built from EASE/DURATION.
-// Shared by page transitions, section reveals, and interactive springs.
+// DATUM: springs are banned — every preset is a snap-eased tween.
 
 import type { Transition } from "framer-motion";
 import { DURATION, EASE } from "@/animations/easings";
@@ -7,33 +7,29 @@ import { DURATION, EASE } from "@/animations/easings";
 /** Route/page-level transition. */
 export const pageTransition: Transition = {
   duration: DURATION.slow,
-  ease: EASE.outExpo,
+  ease: EASE.snap,
 };
 
 /** Section entrance transition for in-view reveals. */
 export const sectionReveal: Transition = {
   duration: DURATION.moderate,
-  ease: EASE.out,
+  ease: EASE.snap,
 };
 
-/** Snappy transition for small UI state changes. */
+/** Snappy transition for small UI state changes (badges/tabs/tooltip/dropdown/toggle). */
 export const snappy: Transition = {
   duration: DURATION.fast,
-  ease: EASE.out,
+  ease: EASE.snap,
 };
 
-/** Smooth spring for magnetic / interactive elements. */
+/** @deprecated Springs are banned in DATUM — aliased to a snap tween. */
 export const smoothSpring: Transition = {
-  type: "spring",
-  stiffness: 220,
-  damping: 28,
-  mass: 0.9,
+  duration: DURATION.moderate,
+  ease: EASE.snap,
 };
 
-/** Bouncy spring for playful emphasis. */
+/** @deprecated Springs are banned in DATUM — aliased to a snap tween. */
 export const bounceSpring: Transition = {
-  type: "spring",
-  stiffness: 320,
-  damping: 18,
-  mass: 0.8,
+  duration: DURATION.fast,
+  ease: EASE.snap,
 };

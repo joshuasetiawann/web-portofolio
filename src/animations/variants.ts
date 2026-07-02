@@ -1,5 +1,5 @@
 // Core reusable Framer Motion variants (transform/opacity only).
-// Used across reveal, list, and container animations throughout the app.
+// DATUM: snap easing, no scale/spring — mechanical entrances.
 
 import type { Variants } from "framer-motion";
 import { DURATION, EASE } from "@/animations/easings";
@@ -10,7 +10,7 @@ export const fadeIn: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { duration: DURATION.base, ease: EASE.out },
+    transition: { duration: DURATION.base, ease: EASE.snap },
   },
 };
 
@@ -20,7 +20,7 @@ export const fadeInUp: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: DURATION.moderate, ease: EASE.out },
+    transition: { duration: DURATION.moderate, ease: EASE.snap },
   },
 };
 
@@ -30,17 +30,16 @@ export const fadeInDown: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: DURATION.moderate, ease: EASE.out },
+    transition: { duration: DURATION.moderate, ease: EASE.snap },
   },
 };
 
-/** Fade with a subtle scale-up. */
+/** Plain fade — DATUM drops the scale (no zoom/spring). Kept for API compatibility. */
 export const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.96 },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    scale: 1,
-    transition: { duration: DURATION.base, ease: EASE.outExpo },
+    transition: { duration: DURATION.base, ease: EASE.snap },
   },
 };
 

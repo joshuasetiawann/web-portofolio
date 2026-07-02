@@ -12,7 +12,7 @@ interface RevealOptions {
   direction?: RevealDirection;
   /** Pixel distance travelled (defaults to 28). */
   distance?: number;
-  /** Whether to animate a 6px -> 0px blur. */
+  /** Whether to animate a 6px -> 0px blur. DATUM default: off (mechanical arrive). */
   blur?: boolean;
   /** Override duration in seconds. */
   duration?: number;
@@ -44,7 +44,7 @@ export function createReveal(options: RevealOptions = {}): Variants {
   const {
     direction = "up",
     distance = 28,
-    blur = true,
+    blur = false,
     duration = DURATION.moderate,
     delay = 0,
   } = options;
@@ -62,7 +62,7 @@ export function createReveal(options: RevealOptions = {}): Variants {
       x: 0,
       y: 0,
       ...(blur ? { filter: "blur(0px)" } : {}),
-      transition: { duration, delay, ease: EASE.out },
+      transition: { duration, delay, ease: EASE.snap },
     },
   };
 }
