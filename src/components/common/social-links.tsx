@@ -29,14 +29,14 @@ export function SocialLinks({ links = socialLinks, className, size = "md" }: Soc
               title={link.label}
               {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className={cn(
-                "flex items-center justify-center rounded-lg border border-border bg-surface-1 text-foreground-muted transition-colors hover:border-border-strong hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                "flex items-center justify-center border border-border text-foreground-muted transition-colors hover:text-signal",
                 sizing,
               )}
             >
               {Icon ? (
                 <Icon className={iconSize} aria-hidden="true" />
               ) : (
-                <span className="text-xs font-medium">{link.label.charAt(0)}</span>
+                <span className="font-mono text-xs">{link.label.charAt(0)}</span>
               )}
             </a>
           </li>

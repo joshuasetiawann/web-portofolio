@@ -1,11 +1,10 @@
-// Gallery tile that opens a Dialog lightbox; renders a gradient placeholder until real media exists.
+// Gallery tile that opens a Dialog lightbox; renders a graphite grid placeholder until real media exists.
 "use client";
 
 import Image from "next/image";
 import { AnimatePresence, m } from "framer-motion";
 
 import { DURATION, EASE } from "@/animations/easings";
-import { useMediaQuery } from "@/hooks/use-media-query";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/utils/format-date";
@@ -24,18 +23,8 @@ interface GalleryItemProps {
   item: GalleryItemData;
 }
 
-function placeholderStyle(accent?: string): React.CSSProperties | undefined {
-  if (!accent) return undefined;
-  return {
-    backgroundImage: `radial-gradient(120% 120% at 0% 0%, ${accent}40 0%, transparent 60%), radial-gradient(120% 120% at 100% 100%, ${accent}26 0%, transparent 55%)`,
-  };
-}
-
 export function GalleryItem({ item }: GalleryItemProps) {
   const reducedMotion = useReducedMotion();
-  const isTouch = useMediaQuery("(pointer: coarse)");
-  // Subtle zoom-within-frame only when motion is welcome and a fine pointer is present.
-  const enableHoverZoom = !reducedMotion && !isTouch;
 
   const ratio = item.height > 0 ? item.width / item.height : 16 / 9;
   const MediaIcon = getIcon(item.type === "video" ? "Rocket" : "Images") ?? getIcon("Images");
@@ -54,8 +43,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
       ) : (
         <div
           aria-hidden="true"
-          className="flex h-full w-full items-center justify-center bg-surface-2"
-          style={placeholderStyle(item.accent)}
+          className="relative flex h-full w-full items-center justify-center bg-surface-1"
         >
           <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:24px_24px] opacity-30" />
           {MediaIcon ? <MediaIcon className="relative size-7 text-foreground-subtle" /> : null}
@@ -70,29 +58,32 @@ export function GalleryItem({ item }: GalleryItemProps) {
         <button
           type="button"
           className={cn(
-            "group relative flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-1 text-left",
-            "transition-all hover:-translate-y-0.5 hover:border-border-strong",
-            "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none",
+            "group relative flex w-full flex-col overflow-hidden rounded-none border border-border text-left",
+            "transition-colors hover:border-border-strong",
+            "focus-visible:border-primary",
           )}
           aria-label={`Open ${item.title}`}
         >
           <span className="relative block w-full overflow-hidden" style={{ aspectRatio: ratio }}>
-            <span
-              className={cn(
-                "block h-full w-full",
-                enableHoverZoom &&
-                  "transition-transform duration-500 ease-out will-change-transform group-hover:scale-[1.04]",
-              )}
-            >
-              {visual}
-            </span>
+            {visual}
           </span>
-          <span className="flex flex-col gap-2 p-4">
-            <span className="flex items-center justify-between gap-2">
-              <span className="font-display text-sm font-medium text-foreground">{item.title}</span>
+          <span className="flex flex-col gap-2 border-t border-border p-4">
+            <span className="flex items-start justify-between gap-2">
+              <span className="font-display text-sm font-medium text-foreground transition-colors group-hover:text-signal">
+                {item.title}
+              </span>
               <Badge variant="secondary" className="shrink-0">
                 {item.category}
               </Badge>
+            </span>
+            <span className="flex items-center gap-2 font-mono text-mono-meta text-foreground-subtle">
+              <time dateTime={item.date} className="tabular">
+                {item.date}
+              </time>
+              <span aria-hidden="true">·</span>
+              <span className="tabular">
+                {item.width}×{item.height}
+              </span>
             </span>
             {item.caption ? (
               <span className="text-sm text-foreground-muted">{item.caption}</span>
@@ -111,7 +102,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
             exit={reducedMotion ? undefined : { opacity: 0, scale: 0.98 }}
             transition={{ duration: DURATION.base, ease: [...EASE.out] }}
           >
-            <div className="relative overflow-hidden rounded-xl border border-border">
+            <div className="relative overflow-hidden rounded-none border border-border">
               <div className="relative w-full" style={{ aspectRatio: ratio }}>
                 {visual}
               </div>
@@ -120,7 +111,9 @@ export function GalleryItem({ item }: GalleryItemProps) {
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary">{item.category}</Badge>
                 {formattedDate ? (
-                  <span className="text-xs text-foreground-subtle">{formattedDate}</span>
+                  <span className="font-mono tabular text-mono-meta text-foreground-subtle">
+                    {formattedDate}
+                  </span>
                 ) : null}
               </div>
               <DialogTitle className="font-display text-lg">{item.title}</DialogTitle>

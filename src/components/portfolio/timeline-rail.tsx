@@ -123,7 +123,7 @@ export function TimelineRail({ groups }: TimelineRailProps) {
           >
             <h2
               id={`timeline-year-${year}`}
-              className="font-display text-2xl font-semibold text-foreground"
+              className="font-mono tabular text-2xl font-semibold tracking-wide text-foreground"
             >
               {year}
             </h2>

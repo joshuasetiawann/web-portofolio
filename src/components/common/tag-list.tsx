@@ -24,8 +24,8 @@ export function TagList({ tags, basePath, active, className }: TagListProps) {
             {basePath ? (
               <Badge
                 asChild
-                variant={isActive ? "default" : "outline"}
-                className={cn("transition-colors", isActive && "font-semibold ring-1 ring-ring")}
+                variant="outline"
+                className={cn(isActive && "border-primary text-primary")}
               >
                 <Link
                   href={`${basePath}?tag=${encodeURIComponent(tag)}`}
@@ -36,8 +36,8 @@ export function TagList({ tags, basePath, active, className }: TagListProps) {
               </Badge>
             ) : (
               <Badge
-                variant={isActive ? "default" : "outline"}
-                className={cn(isActive && "font-semibold ring-1 ring-ring")}
+                variant="outline"
+                className={cn(isActive && "border-primary text-primary")}
                 aria-current={isActive ? "true" : undefined}
               >
                 {tag}

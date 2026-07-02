@@ -14,24 +14,19 @@ export function StatCard({ label, value, icon, description, className }: StatCar
   const Icon = getIcon(icon);
 
   return (
-    <div
-      className={cn(
-        "group rounded-2xl border border-border bg-surface-1 p-5 transition-colors hover:border-border-strong sm:p-6",
-        className,
-      )}
-    >
+    <div className={cn("group border border-border p-5 sm:p-6", className)}>
       <div className="flex items-start justify-between gap-3">
-        <p className="font-mono text-xs tracking-wide text-foreground-subtle uppercase">{label}</p>
+        <p className="font-mono text-mono-label text-foreground-subtle uppercase">{label}</p>
         {Icon ? (
           <span
-            className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-primary"
+            className="flex size-8 shrink-0 items-center justify-center border border-border text-foreground-subtle"
             aria-hidden="true"
           >
             <Icon className="size-4" />
           </span>
         ) : null}
       </div>
-      <p className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+      <p className="mt-3 font-display tabular text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
         {value}
       </p>
       {description ? (

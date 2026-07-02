@@ -13,7 +13,10 @@ export function ExternalLink({ href, children, className, ...props }: ExternalLi
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={cn("underline-offset-4 hover:underline focus-visible:underline", className)}
+      className={cn(
+        "underline-offset-4 transition-colors hover:text-signal hover:underline focus-visible:underline",
+        className,
+      )}
       {...props}
     >
       {children}

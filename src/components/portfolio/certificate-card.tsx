@@ -1,7 +1,7 @@
 // CertificateCard — a credential card that opens a dialog with full details (skills, credential id, verification link).
 "use client";
 
-import { ArrowUpRight, Award, Calendar } from "lucide-react";
+import { ArrowUpRight, Calendar } from "lucide-react";
 
 import { SkillBadge } from "@/components/common/skill-badge";
 import { ExternalLink } from "@/components/shared/external-link";
@@ -30,23 +30,18 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="group flex h-full w-full flex-col gap-3 rounded-2xl border border-border bg-surface-1 p-6 text-left transition-[transform,border-color] hover:-translate-y-0.5 hover:border-border-strong focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
+          className="group flex h-full w-full flex-col gap-3 border border-border p-6 text-left transition-colors hover:border-border-strong focus-visible:border-primary"
         >
-          <span
-            aria-hidden="true"
-            className="flex size-10 items-center justify-center rounded-lg border border-border bg-surface-2 text-primary"
-          >
-            <Award className="size-5" />
-          </span>
+          <span aria-hidden="true" className="size-2.5 shrink-0 border border-border-strong" />
 
           <span className="flex flex-col gap-1">
-            <span className="font-display text-base leading-snug font-semibold text-foreground">
+            <span className="font-display text-base leading-snug font-semibold text-foreground transition-colors group-hover:text-signal">
               {certificate.name}
             </span>
             <span className="text-sm text-foreground-muted">{certificate.issuer}</span>
           </span>
 
-          <span className="mt-auto inline-flex items-center gap-1.5 pt-1 font-mono text-xs text-foreground-subtle">
+          <span className="mt-auto inline-flex items-center gap-1.5 pt-1 font-mono tabular text-mono-meta tracking-wide text-foreground-subtle uppercase">
             <Calendar className="size-3" aria-hidden="true" />
             {date}
           </span>
@@ -65,9 +60,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
         <div className="flex flex-col gap-4">
           {certificate.skills.length > 0 ? (
             <div className="flex flex-col gap-2">
-              <h4 className="text-xs font-medium tracking-wide text-foreground-subtle uppercase">
-                Skills
-              </h4>
+              <h4 className="font-mono text-mono-label text-foreground-subtle uppercase">Skills</h4>
               <ul className="flex flex-wrap gap-1.5">
                 {certificate.skills.map((skill) => (
                   <li key={skill}>
@@ -82,10 +75,10 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
 
           {certificate.credentialId ? (
             <div className="flex flex-col gap-1">
-              <h4 className="text-xs font-medium tracking-wide text-foreground-subtle uppercase">
+              <h4 className="font-mono text-mono-label text-foreground-subtle uppercase">
                 Credential ID
               </h4>
-              <p className="font-mono text-sm break-all text-foreground-muted">
+              <p className="font-mono tabular text-sm break-all text-foreground-muted">
                 {certificate.credentialId}
               </p>
             </div>
@@ -94,7 +87,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
           {certificate.url ? (
             <ExternalLink
               href={certificate.url}
-              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-primary"
+              className="inline-flex w-fit items-center gap-1.5 font-mono text-mono-label text-primary uppercase hover:text-signal-hover"
             >
               Verify credential
               <ArrowUpRight className="size-3.5" aria-hidden="true" />

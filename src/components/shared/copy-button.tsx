@@ -50,7 +50,7 @@ export function CopyButton({ value, label = "Copy to clipboard", className }: Co
       className={cn("size-8", className)}
     >
       {copied ? (
-        <Check className="size-4 text-accent-2" aria-hidden="true" />
+        <Check className="size-4 text-signal" aria-hidden="true" />
       ) : (
         <Copy className="size-4" aria-hidden="true" />
       )}

@@ -41,7 +41,7 @@ function MdxH3({ className, ...props }: ComponentProps<"h3">) {
   return (
     <h3
       className={cn(
-        "mt-8 scroll-m-20 font-display text-xl font-semibold tracking-tight text-foreground",
+        "mt-8 scroll-m-20 font-sans text-xl font-semibold tracking-tight text-foreground",
         className,
       )}
       {...props}
@@ -53,7 +53,7 @@ function MdxH4({ className, ...props }: ComponentProps<"h4">) {
   return (
     <h4
       className={cn(
-        "mt-6 scroll-m-20 font-display text-lg font-semibold tracking-tight text-foreground",
+        "mt-6 scroll-m-20 font-sans text-lg font-semibold tracking-tight text-foreground",
         className,
       )}
       {...props}
@@ -77,7 +77,7 @@ function MdxAnchor({
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   const linkClass = cn(
-    "font-medium text-primary underline-offset-4 hover:underline focus-visible:underline",
+    "font-medium text-foreground underline underline-offset-4 transition-colors hover:text-signal focus-visible:text-signal",
     className,
   );
 
@@ -138,17 +138,14 @@ function MdxLi({ className, ...props }: ComponentProps<"li">) {
 function MdxBlockquote({ className, ...props }: ComponentProps<"blockquote">) {
   return (
     <blockquote
-      className={cn(
-        "mt-6 border-l-2 border-border-strong pl-6 text-foreground-muted italic",
-        className,
-      )}
+      className={cn("mt-6 border-l border-primary pl-4 text-foreground-muted italic", className)}
       {...props}
     />
   );
 }
 
 function MdxHr({ className, ...props }: ComponentProps<"hr">) {
-  return <hr className={cn("my-8 border-border", className)} {...props} />;
+  return <hr className={cn("my-8 h-px w-full border-0 bg-rule", className)} {...props} />;
 }
 
 function MdxStrong({ className, ...props }: ComponentProps<"strong">) {
@@ -163,7 +160,7 @@ function MdxCode({ className, ...props }: ComponentProps<"code">) {
   return (
     <code
       className={cn(
-        "rounded border border-border bg-surface-2 px-[0.4em] py-[0.2em] font-mono text-sm text-foreground",
+        "rounded-none border border-border px-[0.4em] py-[0.2em] font-code text-sm text-foreground",
         className,
       )}
       {...props}
@@ -190,10 +187,7 @@ function MdxPre({ children, className, ...props }: ComponentProps<"pre">) {
 
   return (
     <pre
-      className={cn(
-        "my-6 overflow-x-auto rounded-xl border border-border bg-surface-1 p-4 text-sm",
-        className,
-      )}
+      className={cn("my-6 overflow-x-auto border border-border p-4 font-code text-sm", className)}
       {...props}
     >
       {children}
@@ -208,7 +202,7 @@ function MdxImage({ className, alt = "", ...props }: ComponentProps<"img">) {
       alt={alt}
       loading="lazy"
       decoding="async"
-      className={cn("my-6 rounded-lg border border-border", className)}
+      className={cn("my-6 rounded-none border border-border", className)}
       {...props}
     />
   );

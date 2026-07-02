@@ -29,8 +29,8 @@ export function ContentCard({
   return (
     <article
       className={cn(
-        "group relative flex h-full flex-col gap-3 rounded-2xl border border-border bg-surface-1 p-6",
-        "transition-all focus-within:border-border-strong hover:-translate-y-0.5 hover:border-border-strong",
+        "group relative flex h-full flex-col gap-3 border border-border p-6",
+        "transition-colors focus-within:border-border-strong hover:border-border-strong",
       )}
     >
       {eyebrow ? (
@@ -39,7 +39,7 @@ export function ContentCard({
         </span>
       ) : null}
 
-      <h3 className="font-display text-lg leading-snug font-semibold text-balance text-foreground">
+      <h3 className="font-display text-lg leading-snug font-semibold text-balance text-foreground transition-colors group-hover:text-primary">
         <Link
           href={href}
           {...linkProps}
@@ -54,7 +54,11 @@ export function ContentCard({
         <p className="line-clamp-3 text-sm text-foreground-muted">{description}</p>
       ) : null}
 
-      {meta ? <p className="text-xs text-foreground-subtle">{meta}</p> : null}
+      {meta ? (
+        <p className="font-mono tabular text-xs tracking-wide text-foreground-subtle uppercase">
+          {meta}
+        </p>
+      ) : null}
 
       {tags && tags.length > 0 ? <TagList tags={tags} className="mt-auto pt-1" /> : null}
 

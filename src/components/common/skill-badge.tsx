@@ -13,7 +13,7 @@ export function SkillBadge({ label, icon, className }: SkillBadgeProps) {
   const Icon = getIcon(icon);
 
   return (
-    <Badge variant="outline" className={cn("gap-1.5 font-normal", className)}>
+    <Badge variant="outline" className={cn("gap-1.5", className)}>
       {Icon ? <Icon className="size-3" aria-hidden="true" /> : null}
       {label}
     </Badge>

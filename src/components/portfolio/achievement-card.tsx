@@ -1,5 +1,5 @@
 // AchievementCard — a recognition entry: icon, title, category badge, date, description, and an optional reference link.
-import { ArrowUpRight, Trophy } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import { ExternalLink } from "@/components/shared/external-link";
 import { Badge } from "@/components/ui/badge";
@@ -18,25 +18,23 @@ export function AchievementCard({ achievement }: AchievementCardProps) {
   return (
     <article
       className={cn(
-        "group flex h-full flex-col gap-3 rounded-2xl border border-border bg-surface-1 p-6",
-        "transition-[transform,border-color] hover:-translate-y-0.5 hover:border-border-strong",
+        "group flex h-full flex-col gap-3 border border-border p-6",
+        "transition-colors hover:border-border-strong",
       )}
     >
       <div className="flex items-start justify-between gap-3">
-        <span
-          aria-hidden="true"
-          className="flex size-10 items-center justify-center rounded-lg border border-border bg-surface-2 text-primary"
-        >
-          <Trophy className="size-5" />
-        </span>
+        <span aria-hidden="true" className="mt-1 size-2.5 shrink-0 border border-border-strong" />
         <Badge variant="secondary">{achievement.category}</Badge>
       </div>
 
       <div className="flex flex-col gap-1">
-        <h3 className="font-display text-base leading-snug font-semibold text-foreground">
+        <h3 className="font-display text-base leading-snug font-semibold text-foreground transition-colors group-hover:text-signal">
           {achievement.title}
         </h3>
-        <time dateTime={achievement.date} className="font-mono text-xs text-foreground-subtle">
+        <time
+          dateTime={achievement.date}
+          className="font-mono tabular text-mono-meta tracking-wide text-foreground-subtle uppercase"
+        >
           {date}
         </time>
       </div>
@@ -46,7 +44,7 @@ export function AchievementCard({ achievement }: AchievementCardProps) {
       {achievement.link ? (
         <ExternalLink
           href={achievement.link}
-          className="mt-auto inline-flex w-fit items-center gap-1.5 pt-1 text-sm font-medium text-primary"
+          className="mt-auto inline-flex w-fit items-center gap-1.5 pt-1 font-mono text-mono-label text-primary uppercase hover:text-signal-hover"
         >
           Learn more
           <ArrowUpRight className="size-3.5" aria-hidden="true" />

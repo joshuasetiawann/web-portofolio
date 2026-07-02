@@ -46,7 +46,7 @@ export function TimelineItem({ event }: TimelineItemProps) {
       <div className="flex flex-col items-center">
         <span
           aria-hidden="true"
-          className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border bg-surface-2 text-primary"
+          className="flex size-9 shrink-0 items-center justify-center rounded-none border border-border text-primary"
         >
           <Icon className="size-4" />
         </span>
@@ -54,10 +54,12 @@ export function TimelineItem({ event }: TimelineItemProps) {
       </div>
 
       <div className="flex flex-col gap-1 pb-1">
-        <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-foreground-subtle">
-          <time dateTime={event.date}>{date}</time>
+        <div className="flex flex-wrap items-center gap-2 font-mono text-mono-meta text-foreground-subtle">
+          <time dateTime={event.date} className="tabular">
+            {date}
+          </time>
           <span aria-hidden="true">·</span>
-          <span className="tracking-wide uppercase">{label}</span>
+          <span className="text-mono-label uppercase">{label}</span>
         </div>
 
         <h3 className="font-display text-base leading-snug font-semibold text-foreground">

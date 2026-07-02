@@ -11,12 +11,7 @@ interface CodeBlockProps {
 
 export function CodeBlock({ code, language, filename, className }: CodeBlockProps) {
   return (
-    <figure
-      className={cn(
-        "group relative overflow-hidden rounded-xl border border-border bg-surface-1",
-        className,
-      )}
-    >
+    <figure className={cn("group relative overflow-hidden border border-border", className)}>
       {filename ? (
         <figcaption className="flex items-center justify-between border-b border-border px-4 py-2 font-mono text-xs text-foreground-muted">
           <span className="truncate">{filename}</span>
@@ -29,7 +24,7 @@ export function CodeBlock({ code, language, filename, className }: CodeBlockProp
         <CopyButton value={code} label="Copy code" />
       </div>
       <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
-        <code className="font-mono text-foreground" data-language={language ?? undefined}>
+        <code className="font-code text-foreground" data-language={language ?? undefined}>
           {code}
         </code>
       </pre>

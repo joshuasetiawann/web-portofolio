@@ -48,20 +48,30 @@ export function ProjectFilter({ projects, categories }: ProjectFilterProps) {
               aria-pressed={isActive}
               onClick={() => setSelected(chip)}
               className={cn(
-                "inline-flex min-h-9 items-center rounded-full border px-4 py-1.5 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none",
+                "inline-flex min-h-9 items-center gap-2 rounded-none border px-4 py-1.5 font-mono text-xs tracking-wide uppercase transition-colors focus-visible:border-primary focus-visible:outline-none",
                 isActive
-                  ? "border-primary bg-primary font-semibold text-primary-foreground ring-2 ring-ring/40"
-                  : "border-border bg-surface-1 font-medium text-foreground-muted hover:border-border-strong hover:text-foreground",
+                  ? "border-primary text-primary"
+                  : "border-border text-foreground-muted hover:border-border-strong hover:text-foreground",
               )}
             >
+              <span
+                aria-hidden="true"
+                className={cn("block h-3 w-px", isActive ? "bg-signal" : "bg-transparent")}
+              />
               {chip}
             </button>
           );
         })}
       </div>
 
-      <p className="sr-only" aria-live="polite">
-        {filtered.length} project{filtered.length === 1 ? "" : "s"} shown
+      <p
+        aria-live="polite"
+        className="font-mono text-xs tracking-wide text-foreground-subtle uppercase"
+      >
+        Showing{" "}
+        <span className="tabular text-foreground">{String(filtered.length).padStart(2, "0")}</span>{" "}
+        / <span className="tabular">{String(projects.length).padStart(2, "0")}</span> project
+        {projects.length === 1 ? "" : "s"}
       </p>
 
       {filtered.length > 0 ? (

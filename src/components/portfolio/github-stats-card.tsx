@@ -14,24 +14,22 @@ export function GitHubStatsCard({ label, value, icon }: GitHubStatsCardProps) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-2xl border border-border bg-surface-1 p-5",
-        "transition-all hover:-translate-y-0.5 hover:border-border-strong",
+        "flex flex-col gap-3 rounded-none border border-border p-5",
+        "transition-colors hover:border-border-strong",
       )}
     >
       <div className="flex items-center gap-2 text-foreground-muted">
         {Icon ? (
           <span
             aria-hidden="true"
-            className="flex size-8 items-center justify-center rounded-lg bg-surface-2 text-primary"
+            className="flex size-8 shrink-0 items-center justify-center rounded-none border border-border text-foreground-subtle"
           >
             <Icon className="size-4" />
           </span>
         ) : null}
-        <span className="text-xs font-medium tracking-wide text-foreground-subtle uppercase">
-          {label}
-        </span>
+        <span className="font-mono text-mono-label text-foreground-subtle uppercase">{label}</span>
       </div>
-      <p className="font-display text-2xl font-semibold text-foreground tabular-nums">{value}</p>
+      <p className="font-mono tabular text-mono-metric text-foreground">{value}</p>
     </div>
   );
 }
