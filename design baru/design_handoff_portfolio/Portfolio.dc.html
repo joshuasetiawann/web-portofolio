@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#05070D;color:#EAEDF5;font-family:'Geist',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+  ::selection{background:rgba(94,139,255,.28);color:#fff}
+  ::-webkit-scrollbar{width:11px;height:11px}
+  ::-webkit-scrollbar-track{background:#05070D}
+  ::-webkit-scrollbar-thumb{background:#1b2130;border-radius:8px;border:2px solid #05070D}
+  ::-webkit-scrollbar-thumb:hover{background:#2a3346}
+  :root{--accent:#5E8BFF;--accent-2:#38E8C8;--glow:94,139,255}
+  image-slot::part(frame){background:linear-gradient(135deg,rgba(var(--glow,94,139,255),.20),rgba(56,232,200,.07))}
+  image-slot::part(empty){color:rgba(200,214,235,.72)}
+  @keyframes marqueeX{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(56,232,200,.55)}70%{box-shadow:0 0 0 9px rgba(56,232,200,0)}100%{box-shadow:0 0 0 0 rgba(56,232,200,0)}}
+  @keyframes cueMove{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(7px);opacity:1}}
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+<div ref="{{ rootRef }}" style="position:relative;width:100%;overflow:hidden;">
+
+  <!-- ============ HEADER ============ -->
+  <header data-header style="position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(5,7,13,calc(var(--hdr,0)*0.72));backdrop-filter:blur(calc(var(--hdr,0)*14px));-webkit-backdrop-filter:blur(calc(var(--hdr,0)*14px));border-bottom:1px solid rgba(34,40,56,calc(var(--hdr,0)*0.9));transition:background .45s ease,border-color .45s ease;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:15px clamp(20px,5vw,56px);display:flex;align-items:center;justify-content:space-between;gap:20px;">
+      <a href="#top" onClick="{{ goTop }}" aria-label="Joshua Setiawan — top" style="position:relative;display:inline-flex;align-items:center;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:-0.02em;font-size:18px;color:#EAEDF5;min-width:38px;">
+        <span style="opacity:calc(1 - var(--hdr,0));transition:opacity .4s ease;white-space:nowrap;">Joshua Setiawan<span style="color:var(--accent-2,#38E8C8);">.</span></span>
+        <span aria-hidden="true" style="position:absolute;left:0;top:50%;transform:translateY(-50%);opacity:var(--hdr,0);transition:opacity .4s ease;">JS<span style="color:var(--accent-2,#38E8C8);">.</span></span>
+      </a>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button onClick="{{ toggleMenu }}" aria-label="Open jump menu" style="display:inline-flex;align-items:center;gap:9px;font-family:'Geist Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.04em;color:#A4ABBD;background:rgba(255,255,255,.03);border:1px solid #222838;border-radius:11px;padding:9px 13px;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:#2E3548;color:#EAEDF5;">Menu <span style="opacity:.65;">⌘K</span></button>
+        <a href="#contact" onClick="{{ goContact }}" data-magnetic="12" style="display:inline-flex;align-items:center;gap:8px;font-family:'Geist',sans-serif;font-weight:600;font-size:14px;color:#05070D;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));border:none;border-radius:999px;padding:11px 18px;cursor:pointer;text-decoration:none;transform:translate(var(--mgx,0px),var(--mgy,0px));transition:transform .35s cubic-bezier(.16,1,.3,1),filter .3s,box-shadow .3s;box-shadow:0 8px 26px rgba(var(--glow,94,139,255),.26);white-space:nowrap;" style-hover="filter:brightness(1.08);box-shadow:0 12px 34px rgba(var(--glow,94,139,255),.4);">Get in touch <span style="font-size:15px;">→</span></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ JUMP MENU OVERLAY ============ -->
+  <div data-menu style="position:fixed;inset:0;z-index:60;opacity:0;visibility:hidden;pointer-events:none;background:rgba(4,6,11,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:opacity .4s ease,visibility .4s ease;">
+    <div data-menu-inner style="width:100%;max-width:1240px;margin:0 auto;padding:22px clamp(20px,5vw,56px) 40px;height:100%;display:flex;flex-direction:column;transform:translateY(-12px);transition:transform .5s cubic-bezier(.16,1,.3,1);">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;">Jump anywhere</span>
+        <button onClick="{{ closeMenu }}" aria-label="Close menu" style="width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:#A4ABBD;background:rgba(255,255,255,.03);border:1px solid #222838;border-radius:12px;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:#2E3548;color:#EAEDF5;">✕</button>
+      </div>
+      <nav style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;padding:24px 0;">
+        <sc-for list="{{ nav }}" as="item" hint-placeholder-count="5">
+          <a href="#{{ item.id }}" onClick="{{ item.onClick }}" style="display:flex;align-items:baseline;gap:20px;text-decoration:none;padding:clamp(8px,1.4vw,14px) 0;border-bottom:1px solid rgba(34,40,56,.7);color:#EAEDF5;transition:color .25s,padding-left .35s cubic-bezier(.16,1,.3,1);" style-hover="color:var(--accent,#5E8BFF);padding-left:14px;">
+            <span style="font-family:'Geist Mono',monospace;font-size:13px;color:#7E8699;min-width:34px;">0{{ item.n }}</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,6vw,3.6rem);letter-spacing:-0.02em;line-height:1.05;">{{ item.label }}</span>
+          </a>
+        </sc-for>
+      </nav>
+      <div style="display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center;font-family:'Geist Mono',monospace;font-size:13px;">
+        <sc-for list="{{ socials }}" as="s2" hint-placeholder-count="4">
+          <a href="{{ s2.href }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;color:#A4ABBD;text-decoration:none;transition:color .2s;" style-hover="color:#EAEDF5;">{{ s2.label }} <span style="opacity:.6;">↗</span></a>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <section id="top" data-hero style="position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding:130px 0 90px;">
+    <div aria-hidden="true" style="position:absolute;inset:0;z-index:0;background:radial-gradient(72% 60% at 50% -6%, rgba(var(--glow,94,139,255),0.18), transparent 62%);"></div>
+    <div aria-hidden="true" style="position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(34,40,56,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(34,40,56,.45) 1px,transparent 1px);background-size:66px 66px;-webkit-mask-image:radial-gradient(72% 68% at 50% 32%,#000,transparent 74%);mask-image:radial-gradient(72% 68% at 50% 32%,#000,transparent 74%);opacity:.55;"></div>
+    <canvas ref="{{ canvasRef }}" aria-hidden="true" tabindex="-1" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;"></canvas>
+    <div data-spot aria-hidden="true" style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(340px circle at var(--mx,50%) var(--my,30%), rgba(var(--glow,94,139,255),0.12), transparent 60%);"></div>
+
+    <div style="position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,28px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);transition-delay:var(--rd,0ms);--rd:0ms;display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <span style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist Mono',ui-monospace,monospace;font-size:12px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:#A4ABBD;white-space:nowrap;"><span style="width:7px;height:7px;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));transform:rotate(45deg);border-radius:1px;"></span>Creative Developer · Software Engineer</span>
+        <span style="display:inline-flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.05em;color:#A4ABBD;border:1px solid #222838;border-radius:999px;padding:5px 12px;background:rgba(10,13,22,.5);white-space:nowrap;"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent-2,#38E8C8);animation:pulseDot 2.4s infinite;"></span>Open to new work</span>
+      </div>
+
+      <h1 style="margin:26px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:-0.03em;line-height:0.9;font-size:clamp(3.4rem,13vw,10rem);color:#EAEDF5;">
+        <span data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,30px));transition:opacity .95s cubic-bezier(.16,1,.3,1),transform .95s cubic-bezier(.16,1,.3,1);transition-delay:var(--rd,0ms);--rd:80ms;display:block;">Joshua</span>
+        <span data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,30px));transition:opacity .95s cubic-bezier(.16,1,.3,1),transform .95s cubic-bezier(.16,1,.3,1);transition-delay:var(--rd,0ms);--rd:170ms;display:block;"><span style="background:linear-gradient(110deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));-webkit-background-clip:text;background-clip:text;color:transparent;">Setiawan</span><span style="color:var(--accent-2,#38E8C8);">.</span></span>
+      </h1>
+
+      <p data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,24px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);transition-delay:var(--rd,0ms);--rd:280ms;margin:34px 0 0;max-width:600px;font-size:clamp(1.05rem,1.4vw,1.25rem);line-height:1.65;color:#A4ABBD;text-wrap:pretty;">I build interfaces where rigorous engineering meets expressive design — fast, accessible, quietly ambitious software, and the occasional thing that moves.</p>
+
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,24px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);transition-delay:var(--rd,0ms);--rd:380ms;display:flex;flex-wrap:wrap;gap:14px;margin-top:40px;">
+        <a href="#work" onClick="{{ goWork }}" data-magnetic="18" style="display:inline-flex;align-items:center;gap:9px;font-family:'Geist',sans-serif;font-weight:600;font-size:15px;color:#05070D;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));border:none;border-radius:999px;padding:15px 26px;cursor:pointer;text-decoration:none;transform:translate(var(--mgx,0px),var(--mgy,0px));transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .3s ease,filter .3s ease;box-shadow:0 10px 34px rgba(var(--glow,94,139,255),.30);white-space:nowrap;" style-hover="filter:brightness(1.08);box-shadow:0 16px 46px rgba(var(--glow,94,139,255),.44);">See the work <span style="font-size:17px;">→</span></a>
+        <a href="#contact" onClick="{{ goContact }}" data-magnetic="18" style="display:inline-flex;align-items:center;gap:9px;font-family:'Geist',sans-serif;font-weight:600;font-size:15px;color:#EAEDF5;background:rgba(255,255,255,.02);border:1px solid #2E3548;border-radius:999px;padding:15px 26px;cursor:pointer;text-decoration:none;transform:translate(var(--mgx,0px),var(--mgy,0px));transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .25s,background .25s;white-space:nowrap;" style-hover="border-color:var(--accent,#5E8BFF);background:rgba(94,139,255,.08);">Get in touch <span style="font-size:15px;">↗</span></a>
+      </div>
+    </div>
+
+    <div aria-hidden="true" style="position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#7E8699;">Scroll</span>
+      <span style="width:1px;height:34px;background:linear-gradient(180deg,var(--accent,#5E8BFF),transparent);animation:cueMove 2s ease-in-out infinite;"></span>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section style="position:relative;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));border-top:1px solid #222838;border-bottom:1px solid #222838;">
+        <sc-for list="{{ stats }}" as="st" hint-placeholder-count="4">
+          <div style="padding:30px clamp(18px,2.2vw,32px);border-left:1px solid #222838;">
+            <div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#7E8699;">{{ st.label }}</div>
+            <div style="margin-top:16px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2.4rem,4vw,3.3rem);line-height:1;letter-spacing:-0.02em;color:#EAEDF5;font-variant-numeric:tabular-nums;">{{ st.value }}</div>
+            <div style="margin-top:12px;font-size:13px;line-height:1.5;color:#A4ABBD;max-width:230px;">{{ st.note }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MARQUEE ============ -->
+  <div aria-hidden="true" style="position:relative;overflow:hidden;padding:30px 0;margin-top:clamp(40px,6vw,80px);border-top:1px solid #222838;border-bottom:1px solid #222838;background:#07090F;">
+    <div data-marquee style="display:flex;width:max-content;animation:marqueeX 36s linear infinite;will-change:transform;">
+      <sc-for list="{{ marquee }}" as="m" hint-placeholder-count="12"><span style="display:inline-flex;align-items:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.5rem,3.4vw,2.7rem);letter-spacing:-0.01em;color:transparent;-webkit-text-stroke:1px #333c52;padding:0 30px;white-space:nowrap;">{{ m }}<span style="display:inline-block;width:9px;height:9px;background:var(--accent,#5E8BFF);transform:rotate(45deg);border-radius:1px;margin-left:30px;-webkit-text-stroke:0;"></span></span></sc-for>
+      <sc-for list="{{ marquee }}" as="m" hint-placeholder-count="12"><span style="display:inline-flex;align-items:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.5rem,3.4vw,2.7rem);letter-spacing:-0.01em;color:transparent;-webkit-text-stroke:1px #333c52;padding:0 30px;white-space:nowrap;">{{ m }}<span style="display:inline-block;width:9px;height:9px;background:var(--accent,#5E8BFF);transform:rotate(45deg);border-radius:1px;margin-left:30px;-webkit-text-stroke:0;"></span></span></sc-for>
+    </div>
+  </div>
+
+  <!-- ============ FEATURED / SELECTED WORK ============ -->
+  <section id="work" style="position:relative;padding:clamp(84px,11vw,164px) 0;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);display:flex;flex-wrap:wrap;gap:22px;align-items:flex-end;justify-content:space-between;">
+        <div style="max-width:640px;">
+          <div style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;"><span style="width:7px;height:7px;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));transform:rotate(45deg);border-radius:1px;"></span>Selected work — 01</div>
+          <h2 style="margin:18px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,4.6vw,3.5rem);line-height:1.02;letter-spacing:-0.025em;color:#EAEDF5;text-wrap:balance;">Real problems, measured outcomes.</h2>
+        </div>
+        <a href="#contact" onClick="{{ goContact }}" style="display:inline-flex;align-items:center;gap:9px;font-family:'Geist',sans-serif;font-weight:600;font-size:14px;color:#EAEDF5;text-decoration:none;border:1px solid #2E3548;border-radius:999px;padding:12px 20px;transition:border-color .25s,background .25s;white-space:nowrap;" style-hover="border-color:var(--accent,#5E8BFF);background:rgba(94,139,255,.07);">Start a project <span>→</span></a>
+      </div>
+
+      <!-- Featured lead -->
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,30px));transition:opacity .95s cubic-bezier(.16,1,.3,1),transform .95s cubic-bezier(.16,1,.3,1);margin-top:52px;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));border:1px solid #222838;border-radius:26px;overflow:hidden;background:#0A0D16;">
+        <div style="position:relative;min-height:400px;">
+          <image-slot id="cover-aurora" style="position:absolute;inset:0;width:100%;height:100%;display:block;" shape="rect" fit="cover" placeholder="Aurora cover"></image-slot>
+          <div style="position:absolute;left:20px;top:20px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#EAEDF5;background:rgba(5,7,13,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid #2E3548;border-radius:999px;padding:7px 13px;pointer-events:none;">★ Featured project</div>
+        </div>
+        <div style="padding:clamp(28px,3vw,46px);display:flex;flex-direction:column;">
+          <div style="display:flex;flex-wrap:wrap;gap:12px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#7E8699;">
+            <span>Design System</span><span style="color:#2E3548;">/</span><span>2025</span><span style="color:#2E3548;">/</span><span style="color:var(--accent-2,#38E8C8);">Live</span>
+          </div>
+          <h3 style="margin:16px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.7rem,2.7vw,2.4rem);letter-spacing:-0.02em;line-height:1.05;color:#EAEDF5;">Aurora Design System</h3>
+          <p style="margin:15px 0 0;font-size:16px;line-height:1.65;color:#A4ABBD;">A token-driven design system and component library powering four product surfaces — themeable, accessible, and zero-runtime by construction.</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px;padding-top:26px;border-top:1px solid #222838;">
+            <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.5rem,2.4vw,2rem);letter-spacing:-0.02em;color:#EAEDF5;font-variant-numeric:tabular-nums;">4</div><div style="margin-top:5px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#7E8699;">Surfaces</div></div>
+            <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.5rem,2.4vw,2rem);letter-spacing:-0.02em;color:#EAEDF5;font-variant-numeric:tabular-nums;">0</div><div style="margin-top:5px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#7E8699;">A11y issues</div></div>
+            <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.5rem,2.4vw,2rem);letter-spacing:-0.02em;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums;">−60%</div><div style="margin-top:5px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#7E8699;">Setup time</div></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;">
+            <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A4ABBD;background:#10131F;border:1px solid #222838;border-radius:999px;padding:5px 11px;">TypeScript</span>
+            <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A4ABBD;background:#10131F;border:1px solid #222838;border-radius:999px;padding:5px 11px;">React</span>
+            <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A4ABBD;background:#10131F;border:1px solid #222838;border-radius:999px;padding:5px 11px;">Radix UI</span>
+            <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A4ABBD;background:#10131F;border:1px solid #222838;border-radius:999px;padding:5px 11px;">Storybook</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:20px;margin-top:auto;padding-top:28px;">
+            <a href="#" style="display:inline-flex;align-items:center;gap:7px;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:#EAEDF5;text-decoration:none;transition:color .2s;" style-hover="color:var(--accent,#5E8BFF);">Live <span style="font-size:13px;">↗</span></a>
+            <a href="#" style="display:inline-flex;align-items:center;gap:7px;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:#A4ABBD;text-decoration:none;transition:color .2s;" style-hover="color:#EAEDF5;">Repo <span style="font-size:13px;">↗</span></a>
+            <a href="#" style="display:inline-flex;align-items:center;gap:7px;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:#A4ABBD;text-decoration:none;transition:color .2s;" style-hover="color:#EAEDF5;">Case study <span style="font-size:14px;">→</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected grid -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:20px;">
+        <sc-for list="{{ rest }}" as="p" hint-placeholder-count="5">
+          <a href="{{ p.href }}" data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1),border-color .3s;text-decoration:none;display:flex;flex-direction:column;background:#0A0D16;border:1px solid #222838;border-radius:20px;overflow:hidden;" style-hover="border-color:#2E3548;transform:translateY(-6px);">
+            <div style="position:relative;aspect-ratio:16/10;border-bottom:1px solid #222838;">
+              <image-slot id="cover-{{ p.slug }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;" shape="rect" fit="cover" placeholder="Drop cover"></image-slot>
+              <div style="position:absolute;right:14px;top:12px;font-family:'Geist Mono',monospace;font-size:12px;color:#c3ccdb;background:rgba(5,7,13,.5);border-radius:6px;padding:2px 7px;pointer-events:none;">/{{ p.index }}</div>
+            </div>
+            <div style="padding:22px;display:flex;flex-direction:column;flex:1;">
+              <div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7E8699;">{{ p.category }} · {{ p.year }}</div>
+              <h4 style="margin:11px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.01em;color:#EAEDF5;">{{ p.title }}</h4>
+              <p style="margin:10px 0 0;font-size:14px;line-height:1.6;color:#A4ABBD;flex:1;">{{ p.summary }}</p>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px;">
+                <sc-for list="{{ p.tags }}" as="t" hint-placeholder-count="3"><span style="font-family:'Geist Mono',monospace;font-size:11px;color:#8b93a5;background:#10131F;border:1px solid #222838;border-radius:999px;padding:4px 10px;">{{ t }}</span></sc-for>
+              </div>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATEMENT ============ -->
+  <section style="position:relative;padding:clamp(60px,9vw,120px) 0;border-top:1px solid #222838;background:#07090F;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);max-width:1000px;">
+        <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;">Point of view</div>
+        <p style="margin:22px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(1.7rem,4.4vw,3.4rem);line-height:1.16;letter-spacing:-0.02em;color:#EAEDF5;text-wrap:balance;">Immersion is a <span style="background:linear-gradient(110deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));-webkit-background-clip:text;background-clip:text;color:transparent;">frame around the work</span> — never a substitute for it. Every flourish earns its place, or it gets cut.</p>
+        <div style="margin-top:26px;font-family:'Geist Mono',monospace;font-size:13px;letter-spacing:.04em;color:#A4ABBD;">— how I approach every build</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHILOSOPHY ============ -->
+  <section id="philosophy" style="position:relative;padding:clamp(84px,11vw,164px) 0;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);max-width:680px;">
+        <div style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;"><span style="width:7px;height:7px;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));transform:rotate(45deg);border-radius:1px;"></span>How I work — 02</div>
+        <h2 style="margin:18px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,4.6vw,3.5rem);line-height:1.02;letter-spacing:-0.025em;color:#EAEDF5;text-wrap:balance;">Principles I don't compromise on.</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,4vw,56px);margin-top:56px;">
+        <sc-for list="{{ principles }}" as="pr" hint-placeholder-count="3">
+          <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1);border-top:1px solid #2E3548;padding-top:26px;">
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2.6rem,4.6vw,3.6rem);line-height:1;letter-spacing:-0.02em;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));-webkit-background-clip:text;background-clip:text;color:transparent;">{{ pr.no }}</div>
+            <h3 style="margin:20px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;letter-spacing:-0.01em;color:#EAEDF5;">{{ pr.title }}</h3>
+            <p style="margin:12px 0 0;font-size:15px;line-height:1.68;color:#A4ABBD;">{{ pr.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAPABILITIES ============ -->
+  <section style="position:relative;padding:clamp(60px,8vw,120px) 0;border-top:1px solid #222838;background:#07090F;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);display:flex;flex-wrap:wrap;gap:22px;align-items:flex-end;justify-content:space-between;">
+        <div style="max-width:600px;">
+          <div style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;"><span style="width:7px;height:7px;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));transform:rotate(45deg);border-radius:1px;"></span>Capabilities</div>
+          <h2 style="margin:18px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.9rem,4.2vw,3.1rem);line-height:1.04;letter-spacing:-0.025em;color:#EAEDF5;">A pragmatic, modern toolkit.</h2>
+        </div>
+        <p style="max-width:340px;font-size:15px;line-height:1.65;color:#A4ABBD;">A working set, not a wishlist — tools I use often enough to have strong opinions about.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:48px;">
+        <sc-for list="{{ skills }}" as="g" hint-placeholder-count="4">
+          <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,24px));transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),border-color .3s;background:#0A0D16;border:1px solid #222838;border-radius:20px;padding:26px;" style-hover="border-color:#2E3548;">
+            <div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-2,#38E8C8);">{{ g.category }}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5"><span style="font-family:'Geist',sans-serif;font-size:13px;color:#c3ccdb;background:#10131F;border:1px solid #222838;border-radius:10px;padding:7px 12px;">{{ it }}</span></sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience" style="position:relative;padding:clamp(84px,11vw,164px) 0;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);max-width:680px;">
+        <div style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;"><span style="width:7px;height:7px;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));transform:rotate(45deg);border-radius:1px;"></span>Experience — 03</div>
+        <h2 style="margin:18px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(2rem,4.6vw,3.5rem);line-height:1.02;letter-spacing:-0.025em;color:#EAEDF5;">Where I've been building.</h2>
+      </div>
+      <div style="margin-top:44px;">
+        <sc-for list="{{ experience }}" as="x" hint-placeholder-count="3">
+          <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1);display:flex;flex-wrap:wrap;gap:28px 44px;padding:34px 0;border-top:1px solid #222838;">
+            <div style="flex:0 0 200px;min-width:180px;">
+              <div style="display:inline-flex;align-items:center;gap:9px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--accent-2,#38E8C8);font-variant-numeric:tabular-nums;"><span style="width:7px;height:7px;border-radius:50%;background:var(--accent-2,#38E8C8);"></span>{{ x.period }}</div>
+              <div style="margin-top:12px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;letter-spacing:-0.01em;color:#EAEDF5;">{{ x.company }}</div>
+              <div style="margin-top:5px;font-family:'Geist Mono',monospace;font-size:12px;color:#7E8699;">{{ x.location }}</div>
+            </div>
+            <div style="flex:1 1 380px;min-width:280px;">
+              <h3 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:21px;letter-spacing:-0.01em;color:#EAEDF5;">{{ x.role }}</h3>
+              <p style="margin:10px 0 0;font-size:15px;line-height:1.6;color:#A4ABBD;">{{ x.summary }}</p>
+              <ul style="margin:18px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;">
+                <sc-for list="{{ x.highlights }}" as="h" hint-placeholder-count="3">
+                  <li style="display:flex;gap:12px;font-size:14px;line-height:1.55;color:#A4ABBD;"><span style="color:var(--accent,#5E8BFF);margin-top:1px;">—</span><span>{{ h }}</span></li>
+                </sc-for>
+              </ul>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:18px;">
+                <sc-for list="{{ x.stack }}" as="s" hint-placeholder-count="4"><span style="font-family:'Geist Mono',monospace;font-size:11px;color:#8b93a5;background:#10131F;border:1px solid #222838;border-radius:999px;padding:4px 10px;">{{ s }}</span></sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WRITING & RESEARCH ============ -->
+  <section id="writing" style="position:relative;padding:clamp(60px,8vw,120px) 0;border-top:1px solid #222838;background:#07090F;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);display:flex;flex-wrap:wrap;gap:22px;align-items:flex-end;justify-content:space-between;">
+        <div style="max-width:600px;">
+          <div style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;"><span style="width:7px;height:7px;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));transform:rotate(45deg);border-radius:1px;"></span>Writing & research — 04</div>
+          <h2 style="margin:18px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.9rem,4.2vw,3.1rem);line-height:1.04;letter-spacing:-0.025em;color:#EAEDF5;">Notes on the craft.</h2>
+        </div>
+      </div>
+      <div style="margin-top:40px;">
+        <sc-for list="{{ writing }}" as="w" hint-placeholder-count="5">
+          <a href="{{ w.href }}" data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,22px));transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);text-decoration:none;display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;padding:24px 8px;border-top:1px solid #222838;transition:padding-left .35s cubic-bezier(.16,1,.3,1),background .3s;" style-hover="padding-left:16px;background:rgba(255,255,255,.015);">
+            <span style="flex:0 0 92px;font-family:'Geist Mono',monospace;font-size:13px;color:#7E8699;font-variant-numeric:tabular-nums;">{{ w.date }}</span>
+            <span style="flex:0 0 auto;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2,#38E8C8);border:1px solid #222838;border-radius:999px;padding:4px 11px;">{{ w.kind }}</span>
+            <span style="flex:1 1 320px;min-width:220px;">
+              <span style="display:block;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;letter-spacing:-0.01em;color:#EAEDF5;">{{ w.title }}</span>
+              <span style="display:block;margin-top:5px;font-size:14px;line-height:1.5;color:#A4ABBD;">{{ w.blurb }}</span>
+            </span>
+            <span style="flex:0 0 auto;font-size:18px;color:#7E8699;">→</span>
+          </a>
+        </sc-for>
+        <div style="border-top:1px solid #222838;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section id="gallery" style="position:relative;padding:clamp(84px,11vw,164px) 0;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);max-width:600px;">
+        <div style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;"><span style="width:7px;height:7px;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));transform:rotate(45deg);border-radius:1px;"></span>Gallery</div>
+        <h2 style="margin:18px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(1.9rem,4.2vw,3.1rem);line-height:1.04;letter-spacing:-0.025em;color:#EAEDF5;">Selected visuals.</h2>
+      </div>
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);margin-top:44px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));grid-auto-rows:210px;gap:16px;">
+        <div style="position:relative;grid-column:span 2;grid-row:span 2;border:1px solid #222838;border-radius:20px;overflow:hidden;">
+          <image-slot id="gal-helios" style="position:absolute;inset:0;width:100%;height:100%;display:block;" shape="rect" fit="cover" placeholder="Drop image"></image-slot>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:20px;background:linear-gradient(0deg,rgba(5,7,13,.85),transparent);pointer-events:none;"><div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2,#38E8C8);">WebGL</div><div style="margin-top:5px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px;color:#EAEDF5;">Helios — particle hero</div></div>
+        </div>
+        <div style="position:relative;grid-row:span 2;border:1px solid #222838;border-radius:20px;overflow:hidden;">
+          <image-slot id="gal-aurora" style="position:absolute;inset:0;width:100%;height:100%;display:block;" shape="rect" fit="cover" placeholder="Drop image"></image-slot>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:18px;background:linear-gradient(0deg,rgba(5,7,13,.85),transparent);pointer-events:none;"><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2,#38E8C8);">Design System</div><div style="margin-top:4px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#EAEDF5;">Aurora — token board</div></div>
+        </div>
+        <div style="position:relative;border:1px solid #222838;border-radius:20px;overflow:hidden;">
+          <image-slot id="gal-prism" style="position:absolute;inset:0;width:100%;height:100%;display:block;" shape="rect" fit="cover" placeholder="Drop image"></image-slot>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:16px;background:linear-gradient(0deg,rgba(5,7,13,.82),transparent);pointer-events:none;"><div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#EAEDF5;">Prism — shader study</div></div>
+        </div>
+        <div style="position:relative;border:1px solid #222838;border-radius:20px;overflow:hidden;">
+          <image-slot id="gal-atlas" style="position:absolute;inset:0;width:100%;height:100%;display:block;" shape="rect" fit="cover" placeholder="Drop image"></image-slot>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:16px;background:linear-gradient(0deg,rgba(5,7,13,.82),transparent);pointer-events:none;"><div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#EAEDF5;">Atlas — streaming charts</div></div>
+        </div>
+        <div style="position:relative;grid-column:span 2;border:1px solid #222838;border-radius:20px;overflow:hidden;">
+          <image-slot id="gal-tempo" style="position:absolute;inset:0;width:100%;height:100%;display:block;" shape="rect" fit="cover" placeholder="Drop image"></image-slot>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:18px;background:linear-gradient(0deg,rgba(5,7,13,.82),transparent);pointer-events:none;"><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2,#38E8C8);">Product</div><div style="margin-top:4px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:#EAEDF5;">Tempo — multiplayer canvas</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" style="position:relative;padding:clamp(90px,12vw,180px) 0;border-top:1px solid #222838;overflow:hidden;">
+    <div aria-hidden="true" style="position:absolute;inset:0;z-index:0;background:radial-gradient(60% 60% at 50% 120%, rgba(var(--glow,94,139,255),0.16), transparent 60%);"></div>
+    <div style="position:relative;z-index:1;width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div data-reveal style="opacity:var(--rv,0);transform:translateY(var(--ry,26px));transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);max-width:760px;">
+        <div style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#7E8699;"><span style="width:7px;height:7px;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));transform:rotate(45deg);border-radius:1px;"></span>Contact — 05</div>
+        <h2 style="margin:20px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(3rem,9vw,7rem);line-height:0.98;letter-spacing:-0.03em;color:#EAEDF5;">Let's <span style="background:linear-gradient(110deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));-webkit-background-clip:text;background-clip:text;color:transparent;">talk.</span></h2>
+        <p style="margin:26px 0 0;max-width:560px;font-size:clamp(1.05rem,1.4vw,1.2rem);line-height:1.65;color:#A4ABBD;">A short note is plenty — tell me what you're working on. I'm currently open to new work and usually reply within a couple of days.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:38px;">
+          <a href="mailto:thunityai@gmail.com" data-magnetic="18" style="display:inline-flex;align-items:center;gap:10px;font-family:'Geist',sans-serif;font-weight:600;font-size:15px;color:#05070D;background:linear-gradient(120deg,var(--accent,#5E8BFF),var(--accent-2,#38E8C8));border:none;border-radius:999px;padding:16px 28px;cursor:pointer;text-decoration:none;transform:translate(var(--mgx,0px),var(--mgy,0px));transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .3s,filter .3s;box-shadow:0 10px 34px rgba(var(--glow,94,139,255),.32);" style-hover="filter:brightness(1.08);box-shadow:0 16px 48px rgba(var(--glow,94,139,255),.46);">thunityai@gmail.com <span style="font-size:16px;">↗</span></a>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:34px;font-family:'Geist Mono',monospace;font-size:14px;">
+          <sc-for list="{{ socials }}" as="s2" hint-placeholder-count="4">
+            <a href="{{ s2.href }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;color:#A4ABBD;text-decoration:none;transition:color .2s;" style-hover="color:#EAEDF5;">{{ s2.label }} <span style="opacity:.55;">↗</span></a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="position:relative;border-top:1px solid #222838;padding:56px 0 44px;background:#07090F;">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px);">
+      <div style="display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;">
+        <div style="max-width:340px;">
+          <a href="#top" onClick="{{ goTop }}" style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.02em;color:#EAEDF5;text-decoration:none;">Joshua Setiawan<span style="color:var(--accent-2,#38E8C8);">.</span></a>
+          <p style="margin:14px 0 0;font-size:14px;line-height:1.6;color:#A4ABBD;">Built by Joshua Setiawan. Designed and engineered end to end.</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:44px;">
+          <div>
+            <div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#7E8699;">Navigate</div>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-top:16px;">
+              <sc-for list="{{ nav }}" as="item" hint-placeholder-count="5">
+                <a href="#{{ item.id }}" onClick="{{ item.onClick }}" style="font-size:14px;color:#A4ABBD;text-decoration:none;transition:color .2s;" style-hover="color:#EAEDF5;">{{ item.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#7E8699;">Elsewhere</div>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-top:16px;">
+              <sc-for list="{{ socials }}" as="s2" hint-placeholder-count="4">
+                <a href="{{ s2.href }}" target="_blank" rel="noopener" style="font-size:14px;color:#A4ABBD;text-decoration:none;transition:color .2s;" style-hover="color:#EAEDF5;">{{ s2.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;margin-top:44px;padding-top:24px;border-top:1px solid #222838;font-family:'Geist Mono',monospace;font-size:12px;color:#7E8699;">
+        <span>© 2025 Joshua Setiawan</span>
+        <span>Fast · accessible · built in the open</span>
+        <button onClick="{{ toggleMenu }}" style="font-family:'Geist Mono',monospace;font-size:12px;color:#7E8699;background:none;border:none;cursor:pointer;transition:color .2s;" style-hover="color:#EAEDF5;">Press ⌘K to jump anywhere</button>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;accent&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;azure&quot;, &quot;options&quot;: [&quot;azure&quot;, &quot;violet&quot;, &quot;amber&quot;, &quot;emerald&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Theme&quot;, &quot;label&quot;: &quot;Accent palette&quot; },
+  &quot;motion&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Theme&quot;, &quot;label&quot;: &quot;Motion &amp; signal field&quot; },
+  &quot;density&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 64, &quot;min&quot;: 20, &quot;max&quot;: 130, &quot;step&quot;: 2, &quot;unit&quot;: &quot;pts&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Signal field&quot;, &quot;label&quot;: &quot;Constellation density&quot; }
+}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.rootRef = React.createRef();
+    this.canvasRef = React.createRef();
+    this._raf = 0;
+    this._points = [];
+    this._pointer = { x: -9999, y: -9999, active: false };
+    this._reduced = false;
+    this._io = null;
+    this._heroIO = null;
+    this._cleanup = [];
+    this._menuOpen = false;
+    this._onScroll = null;
+    this._onKey = null;
+    this._w = 0; this._h = 0;
+    this._ar = [94,139,255]; this._br = [56,232,200];
+  }
+
+  palettes() {
+    return {
+      azure:   { a:'#5E8BFF', b:'#38E8C8', glow:'94,139,255' },
+      violet:  { a:'#8B7BFF', b:'#E872C6', glow:'139,123,255' },
+      amber:   { a:'#F5B544', b:'#FF7A6B', glow:'245,181,68' },
+      emerald: { a:'#3DD68C', b:'#38BDF8', glow:'61,214,140' },
+    };
+  }
+  get accentKey() { return this.props.accent || 'azure'; }
+  get motionOn() { return (this.props.motion !== false) && !this._reduced; }
+  get density() { const d = Number(this.props.density); return (isFinite(d) && d > 0) ? d : 64; }
+
+  componentDidMount() {
+    this._reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    this.applyAccent();
+    this.setupReveals();
+    this.setupHeader();
+    this.setupMagnetic();
+    this.setupSpotlight();
+    this.setupSignalField();
+    this.setupKeys();
+    this.applyMarquee();
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.accent !== this.props.accent) { this.applyAccent(); this.rebuildPoints(); if (!this.motionOn) this.drawStaticField(); }
+    if (prev.density !== this.props.density) { this.rebuildPoints(); if (!this.motionOn) this.drawStaticField(); }
+    if (prev.motion !== this.props.motion) {
+      if (this.motionOn) { this.observeReveals(); this.startField(); }
+      else { this.revealAll(); this.stopField(); this.drawStaticField(); }
+      this.applyMarquee();
+    }
+    // re-assert JS-driven state after any prop re-render
+    if (this._onScroll) this._onScroll();
+    this.applyMenu();
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this._raf);
+    if (this._io) this._io.disconnect();
+    if (this._heroIO) this._heroIO.disconnect();
+    this._cleanup.forEach(fn => { try { fn(); } catch (e) {} });
+    document.body.style.overflow = '';
+  }
+
+  q(sel) {
+    const root = this.rootRef.current;
+    return root ? Array.prototype.slice.call(root.querySelectorAll(sel)) : [];
+  }
+
+  applyAccent() {
+    const p = this.palettes()[this.accentKey] || this.palettes().azure;
+    const r = document.documentElement;
+    r.style.setProperty('--accent', p.a);
+    r.style.setProperty('--accent-2', p.b);
+    r.style.setProperty('--glow', p.glow);
+    this._ar = this.hex2rgb(p.a);
+    this._br = this.hex2rgb(p.b);
+  }
+
+  // ---------- reveals ----------
+  showEl(el, delay) {
+    if (el.getAttribute('data-shown-done')) return;
+    el.style.setProperty('--rv', '1');
+    el.style.setProperty('--ry', '0px');
+    el.style.transition = 'none';
+    if (!this.motionOn) { el.style.opacity = '1'; el.style.transform = 'none'; el.setAttribute('data-shown-done', '1'); return; }
+    this.tweenIn(el, delay || 0);
+  }
+  tweenIn(el, delay) {
+    const dur = 680, startY = 26;
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    const start = performance.now() + delay;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(' + startY + 'px)';
+    const step = (now) => {
+      let t = (now - start) / dur;
+      if (t < 0) { requestAnimationFrame(step); return; }
+      if (t >= 1) { el.style.opacity = '1'; el.style.transform = 'none'; el.setAttribute('data-shown-done', '1'); return; }
+      const e = ease(t);
+      el.style.opacity = e.toFixed(3);
+      el.style.transform = 'translateY(' + (startY * (1 - e)).toFixed(2) + 'px)';
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  revealAll() { this.q('[data-reveal]').forEach(el => this.showEl(el)); }
+  setupReveals() {
+    if (!this.motionOn) { this.revealAll(); return; }
+    const check = () => {
+      const vh = window.innerHeight || 800;
+      let idx = 0;
+      this.q('[data-reveal]').forEach(el => {
+        if (el.getAttribute('data-shown')) return;
+        const r = el.getBoundingClientRect();
+        if (r.top < vh * 0.92 && r.bottom > -60) {
+          el.setAttribute('data-shown', '1');
+          this.showEl(el, Math.min(idx * 70, 460));
+          idx++;
+        }
+      });
+    };
+    this._revealCheck = check;
+    check();
+    requestAnimationFrame(check);
+    window.addEventListener('scroll', check, { passive: true });
+    window.addEventListener('resize', check);
+    this._cleanup.push(() => { window.removeEventListener('scroll', check); window.removeEventListener('resize', check); });
+  }
+  observeReveals() { if (this._revealCheck) this._revealCheck(); else this.setupReveals(); }
+
+  // ---------- header ----------
+  setupHeader() {
+    const header = this.rootRef.current && this.rootRef.current.querySelector('[data-header]');
+    if (!header) return;
+    this._onScroll = () => { header.style.setProperty('--hdr', window.scrollY > 32 ? '1' : '0'); };
+    this._onScroll();
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._cleanup.push(() => window.removeEventListener('scroll', this._onScroll));
+  }
+
+  // ---------- magnetic ----------
+  setupMagnetic() {
+    this.q('[data-magnetic]').forEach(el => {
+      const strength = parseFloat(el.getAttribute('data-magnetic')) || 16;
+      const move = (e) => {
+        if (!this.motionOn) return;
+        const r = el.getBoundingClientRect();
+        const mx = e.clientX - (r.left + r.width / 2);
+        const my = e.clientY - (r.top + r.height / 2);
+        const cap = strength;
+        el.style.setProperty('--mgx', Math.max(-cap, Math.min(cap, mx * 0.35)).toFixed(1) + 'px');
+        el.style.setProperty('--mgy', Math.max(-cap, Math.min(cap, my * 0.5)).toFixed(1) + 'px');
+      };
+      const leave = () => { el.style.setProperty('--mgx', '0px'); el.style.setProperty('--mgy', '0px'); };
+      el.addEventListener('pointermove', move);
+      el.addEventListener('pointerleave', leave);
+      this._cleanup.push(() => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); });
+    });
+  }
+
+  // ---------- hero spotlight + pointer ----------
+  setupSpotlight() {
+    const hero = this.rootRef.current && this.rootRef.current.querySelector('[data-hero]');
+    if (!hero) return;
+    const move = (e) => {
+      const r = hero.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      hero.style.setProperty('--mx', x + 'px');
+      hero.style.setProperty('--my', y + 'px');
+      this._pointer.x = x; this._pointer.y = y; this._pointer.active = true;
+    };
+    const leave = () => { this._pointer.active = false; this._pointer.x = -9999; this._pointer.y = -9999; };
+    hero.addEventListener('pointermove', move);
+    hero.addEventListener('pointerleave', leave);
+    this._cleanup.push(() => { hero.removeEventListener('pointermove', move); hero.removeEventListener('pointerleave', leave); });
+  }
+
+  // ---------- signal field ----------
+  setupSignalField() {
+    const canvas = this.canvasRef.current;
+    if (!canvas) return;
+    this.resizeCanvas();
+    this.rebuildPoints();
+    const onResize = () => { this.resizeCanvas(); this.rebuildPoints(); if (!this.motionOn) this.drawStaticField(); };
+    window.addEventListener('resize', onResize);
+    this._cleanup.push(() => window.removeEventListener('resize', onResize));
+    const hero = this.rootRef.current.querySelector('[data-hero]');
+    this._fieldScroll = () => {
+      if (!hero) return;
+      const r = hero.getBoundingClientRect();
+      const visible = r.bottom > 0 && r.top < (window.innerHeight || 800);
+      if (visible && this.motionOn) this.startField(); else this.stopField();
+    };
+    window.addEventListener('scroll', this._fieldScroll, { passive: true });
+    this._cleanup.push(() => window.removeEventListener('scroll', this._fieldScroll));
+    if (this.motionOn) this.startField(); else this.drawStaticField();
+  }
+  resizeCanvas() {
+    const canvas = this.canvasRef.current;
+    if (!canvas || !canvas.parentElement) return;
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this._w = rect.width; this._h = rect.height;
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this._ctx = ctx;
+  }
+  rebuildPoints() {
+    const w = this._w || 1200, h = this._h || 800;
+    const area = w * h;
+    const n = Math.max(24, Math.min(150, Math.round(this.density * (area / (1280 * 760)))));
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      pts.push({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28,
+        r: Math.random() * 1.5 + 0.7,
+      });
+    }
+    this._points = pts;
+  }
+  startField() { if (this._raf) return; const loop = () => { this.drawField(true); this._raf = requestAnimationFrame(loop); }; this._raf = requestAnimationFrame(loop); }
+  stopField() { if (this._raf) { cancelAnimationFrame(this._raf); this._raf = 0; } }
+  drawStaticField() { this.drawField(false); }
+  drawField(animate) {
+    const ctx = this._ctx; if (!ctx) return;
+    const w = this._w, h = this._h, pts = this._points;
+    ctx.clearRect(0, 0, w, h);
+    const maxDist = Math.min(160, Math.max(96, w * 0.11));
+    const ptr = this._pointer;
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      if (animate) {
+        p.x += p.vx; p.y += p.vy;
+        if (ptr.active) {
+          const dx = p.x - ptr.x, dy = p.y - ptr.y, d = Math.hypot(dx, dy);
+          if (d < 150 && d > 0.5) { const f = (150 - d) / 150 * 0.5; p.x += dx / d * f; p.y += dy / d * f; }
+        }
+        if (p.x < -30) p.x = w + 30; else if (p.x > w + 30) p.x = -30;
+        if (p.y < -30) p.y = h + 30; else if (p.y > h + 30) p.y = -30;
+      }
+    }
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[i];
+      for (let j = i + 1; j < pts.length; j++) {
+        const b = pts[j];
+        const dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
+        if (d < maxDist) {
+          const t = a.x / (w || 1);
+          let alpha = (1 - d / maxDist) * 0.5;
+          if (ptr.active) {
+            const near = Math.min(Math.hypot(a.x - ptr.x, a.y - ptr.y), Math.hypot(b.x - ptr.x, b.y - ptr.y));
+            if (near < 170) alpha = Math.min(0.85, alpha * (1 + (170 - near) / 170 * 1.4));
+          }
+          ctx.strokeStyle = this.mix(t, alpha);
+          ctx.lineWidth = 0.7;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+    }
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      ctx.fillStyle = this.mix(p.x / (w || 1), 0.92);
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  mix(t, alpha) {
+    const a = this._ar, b = this._br;
+    const r = Math.round(a[0] + (b[0] - a[0]) * t);
+    const g = Math.round(a[1] + (b[1] - a[1]) * t);
+    const bl = Math.round(a[2] + (b[2] - a[2]) * t);
+    return 'rgba(' + r + ',' + g + ',' + bl + ',' + alpha + ')';
+  }
+  hex2rgb(h) { h = h.replace('#', ''); return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]; }
+
+  // ---------- marquee ----------
+  applyMarquee() {
+    this.q('[data-marquee]').forEach(el => { el.style.animationPlayState = this.motionOn ? 'running' : 'paused'; });
+  }
+
+  // ---------- keys ----------
+  setupKeys() {
+    this._onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); this.toggleMenu(); }
+      else if (e.key === 'Escape' && this._menuOpen) { this.closeMenu(); }
+    };
+    window.addEventListener('keydown', this._onKey);
+    this._cleanup.push(() => window.removeEventListener('keydown', this._onKey));
+  }
+
+  // ---------- menu ----------
+  applyMenu() {
+    const m = this.rootRef.current && this.rootRef.current.querySelector('[data-menu]');
+    if (!m) return;
+    m.style.opacity = this._menuOpen ? '1' : '0';
+    m.style.visibility = this._menuOpen ? 'visible' : 'hidden';
+    m.style.pointerEvents = this._menuOpen ? 'auto' : 'none';
+    const inner = m.querySelector('[data-menu-inner]');
+    if (inner) inner.style.transform = this._menuOpen ? 'translateY(0)' : 'translateY(-12px)';
+    document.body.style.overflow = this._menuOpen ? 'hidden' : '';
+  }
+  openMenu() { this._menuOpen = true; this.applyMenu(); }
+  closeMenu() { this._menuOpen = false; this.applyMenu(); }
+  toggleMenu() { this._menuOpen = !this._menuOpen; this.applyMenu(); }
+
+  // ---------- nav ----------
+  scrollToId(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top: Math.max(0, y), behavior: this.motionOn ? 'smooth' : 'auto' });
+  }
+
+  renderVals() {
+    const nav = [
+      { label: 'Work', id: 'work' },
+      { label: 'Philosophy', id: 'philosophy' },
+      { label: 'Experience', id: 'experience' },
+      { label: 'Writing', id: 'writing' },
+      { label: 'Contact', id: 'contact' },
+    ].map((n, i) => ({
+      label: n.label, id: n.id, n: i + 1,
+      onClick: (e) => { if (e && e.preventDefault) e.preventDefault(); this.closeMenu(); this.scrollToId(n.id); },
+    }));
+
+    const stats = [
+      { label: 'Building since', value: '5+ yrs', note: 'Shipping production interfaces across startups and studios.' },
+      { label: 'Projects shipped', value: '6', note: 'From design systems to immersive WebGL launches.' },
+      { label: 'Open source', value: '4+', note: 'Libraries and tools released in the open.' },
+      { label: 'Writing & research', value: '7+', note: 'Essays and notes on craft, performance, and systems.' },
+    ];
+
+    const marquee = ['Design Systems', 'WebGL', 'Motion', 'Performance', 'Accessibility', 'TypeScript', 'React', 'Three.js', 'Realtime', 'Shaders', 'Next.js', 'Systems Thinking'];
+
+    const rest = [
+      { slug: 'helios-webgl-launch', index: '02', title: 'Helios — WebGL Launch', category: 'Creative / WebGL', year: '2024', href: '#work', summary: 'An immersive, scroll-synced 3D launch experience that stayed under budget on mobile.', tags: ['WebGL', 'Motion', 'Performance'] },
+      { slug: 'tempo-realtime-collab', index: '03', title: 'Tempo — Realtime Collab', category: 'Web App', year: '2024', href: '#work', summary: 'A collaborative whiteboard with conflict-free sync and live presence, built for low latency.', tags: ['Realtime', 'CRDT', 'React'] },
+      { slug: 'atlas-analytics', index: '04', title: 'Atlas Analytics', category: 'Web App', year: '2023', href: '#work', summary: 'A fast, accessible analytics dashboard with streaming charts and shareable saved views.', tags: ['Data Viz', 'Performance'] },
+      { slug: 'prism-shader-toy', index: '05', title: 'Prism — Shader Playground', category: 'Creative / WebGL', year: '2023', href: '#work', summary: 'A browser shader editor with live preview, presets, and shareable URLs.', tags: ['WebGL', 'Shaders', 'Tools'] },
+      { slug: 'ledger-cli', index: '06', title: 'Ledger — Open Source CLI', category: 'Open Source', year: '2022', href: '#work', summary: 'A zero-config, type-safe CLI toolkit adopted by several open-source projects.', tags: ['Open Source', 'Tooling', 'DX'] },
+    ];
+
+    const principles = [
+      { no: '01', title: 'Performance is a feature', body: 'Core Web Vitals are a design constraint, not an afterthought. Every interaction earns its frame budget on a mid-range phone.' },
+      { no: '02', title: 'Accessible by default', body: 'Semantic markup, keyboard paths, and reduced-motion fallbacks ship from day one — not bolted on before launch.' },
+      { no: '03', title: 'Systems over screens', body: 'Token-driven design systems and typed data layers keep large surfaces consistent, themeable, and cheap to evolve.' },
+    ];
+
+    const skills = [
+      { category: 'Languages', items: ['TypeScript', 'JavaScript', 'Python', 'GLSL', 'SQL'] },
+      { category: 'Frameworks & Libraries', items: ['React', 'Next.js', 'Three.js', 'R3F', 'Node.js'] },
+      { category: 'Styling & Motion', items: ['Tailwind CSS', 'Framer Motion', 'GSAP', 'Lenis'] },
+      { category: 'Tooling & Platforms', items: ['Git', 'Vite', 'Vercel', 'Storybook', 'Docker'] },
+    ];
+
+    const experience = [
+      { period: '2023 — Now', company: 'Lumen Labs', role: 'Senior Frontend Engineer', location: 'Remote', summary: 'Lead the web platform team building immersive, performance-first product experiences.', highlights: ['Shipped a token-driven design system adopted across four product surfaces.', 'Reduced Largest Contentful Paint by 38% through streaming and image strategy.', 'Mentored three engineers and established the accessibility review process.'], stack: ['TypeScript', 'Next.js', 'React', 'Framer Motion'] },
+      { period: '2021 — 2023', company: 'Studio Northwind', role: 'Creative Developer', location: 'Jakarta, ID', summary: 'Built award-considered marketing sites blending WebGL, motion, and editorial storytelling.', highlights: ['Delivered 12+ launch sites with bespoke scroll and 3D interactions.', 'Introduced a shared animation toolkit that halved project setup time.'], stack: ['Three.js', 'GSAP', 'R3F', 'Lenis'] },
+      { period: '2020', company: 'Vertex Systems', role: 'Software Engineer Intern', location: 'Bandung, ID', summary: 'Contributed to internal tooling and data dashboards used by the operations team.', highlights: ['Built a reusable charting module consumed by five internal dashboards.', 'Automated a manual reporting workflow, saving roughly six hours weekly.'], stack: ['TypeScript', 'React', 'Node.js', 'PostgreSQL'] },
+    ];
+
+    const writing = [
+      { date: '2025 · 04', kind: 'Research', title: 'Perceptual Color Scales for Dark Interfaces', blurb: 'OKLCH-based color ramps that preserve contrast across dark and light without per-step tuning.', href: '#writing' },
+      { date: '2025 · 02', kind: 'Essay', title: 'Designing with tokens', blurb: 'Why naming tokens by role, not appearance, makes a rebrand a non-event.', href: '#writing' },
+      { date: '2024 · 11', kind: 'Research', title: 'Frame-Budget Scheduling for GPU Particle Systems', blurb: 'Keeping large instanced particle systems within a mobile frame budget.', href: '#writing' },
+      { date: '2024 · 08', kind: 'Essay', title: 'Building immersive web experiences', blurb: 'A field guide to shipping WebGL that survives real marketing traffic.', href: '#writing' },
+      { date: '2024 · 03', kind: 'Essay', title: 'Performance budgets that stick', blurb: 'Turning Core Web Vitals into a constraint the whole team can hold.', href: '#writing' },
+    ];
+
+    const socials = [
+      { label: 'GitHub', href: 'https://github.com/joshuasetiawan' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/joshuasetiawan' },
+      { label: 'Twitter', href: 'https://twitter.com/joshuasetiawan' },
+      { label: 'Email', href: 'mailto:thunityai@gmail.com' },
+    ];
+
+    return {
+      rootRef: this.rootRef,
+      canvasRef: this.canvasRef,
+      nav, stats, marquee, rest, principles, skills, experience, writing, socials,
+      goTop: (e) => { if (e && e.preventDefault) e.preventDefault(); this.closeMenu(); window.scrollTo({ top: 0, behavior: this.motionOn ? 'smooth' : 'auto' }); },
+      goWork: (e) => { if (e && e.preventDefault) e.preventDefault(); this.scrollToId('work'); },
+      goContact: (e) => { if (e && e.preventDefault) e.preventDefault(); this.closeMenu(); this.scrollToId('contact'); },
+      toggleMenu: () => this.toggleMenu(),
+      closeMenu: () => this.closeMenu(),
+    };
+  }
+}
+</script>
+</body>
+</html>

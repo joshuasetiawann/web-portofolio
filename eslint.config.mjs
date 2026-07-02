@@ -30,6 +30,8 @@ const eslintConfig = defineConfig([
     ".velite/**",
     "next-env.d.ts",
     "src/components/ui/**",
+    // Design-tool handoff exports: generated reference assets, not source code.
+    "design baru/**",
   ]),
 ]);
 
