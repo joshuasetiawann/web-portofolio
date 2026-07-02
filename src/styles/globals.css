@@ -188,6 +188,8 @@
       "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Reserve the fixed instrument StatusBar (no CLS). */
+    padding-bottom: var(--statusbar-h);
   }
 
   /* Display voice reads as "expanded" via Archivo's variable width axis.

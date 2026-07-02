@@ -20,7 +20,7 @@ export function Footer() {
         {/* Closing CTA */}
         <div className="flex flex-col gap-6 border-b border-border pb-10 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-3">
-            <span className="font-mono text-xs tracking-widest text-accent-2 uppercase">
+            <span className="font-mono text-mono-eyebrow tracking-widest text-signal uppercase">
               Let&apos;s connect
             </span>
             <h2 className="max-w-md font-display text-2xl font-semibold tracking-tight text-balance text-foreground sm:text-3xl">

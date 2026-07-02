@@ -54,9 +54,7 @@ export function MobileMenu() {
       >
         {Icon ? <Icon className="size-5 shrink-0" aria-hidden="true" /> : null}
         <span>{item.label}</span>
-        {active ? (
-          <span aria-hidden="true" className="ml-auto size-1.5 rounded-full bg-primary" />
-        ) : null}
+        {active ? <span aria-hidden="true" className="ml-auto size-1.5 bg-signal" /> : null}
       </Link>
     );
   };
@@ -86,9 +84,7 @@ export function MobileMenu() {
             <span className="text-xs text-foreground-muted">{item.description}</span>
           ) : null}
         </span>
-        {active ? (
-          <span aria-hidden="true" className="mt-2 ml-auto size-1.5 rounded-full bg-primary" />
-        ) : null}
+        {active ? <span aria-hidden="true" className="mt-2 ml-auto size-1.5 bg-signal" /> : null}
       </Link>
     );
   };

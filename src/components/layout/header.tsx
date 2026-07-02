@@ -92,7 +92,7 @@ export function Header() {
                 {active ? (
                   <span
                     aria-hidden="true"
-                    className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-primary"
+                    className="absolute inset-x-3 -bottom-px h-px bg-signal"
                   />
                 ) : null}
               </Link>
@@ -116,7 +116,7 @@ export function Header() {
                 {exploreActive ? (
                   <span
                     aria-hidden="true"
-                    className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-primary"
+                    className="absolute inset-x-3 -bottom-px h-px bg-signal"
                   />
                 ) : null}
               </Button>
