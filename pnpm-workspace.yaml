@@ -1,5 +1,8 @@
-# Native build scripts are skipped — these packages ship prebuilt binaries.
-ignoredBuiltDependencies:
-  - esbuild
-  - sharp
-  - unrs-resolver
+# Native dependency build scripts, explicitly approved. pnpm 11 renamed the
+# setting to `allowBuilds` (the pnpm-10 `ignoredBuiltDependencies` key is no
+# longer read), and CI strict mode (Vercel) fails the install on builds that
+# are neither approved nor denied — so the decision must live here.
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
