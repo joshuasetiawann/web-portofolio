@@ -8,9 +8,9 @@ import { Section } from "@/components/layout/section";
 import { Container } from "@/components/layout/container";
 import { SectionHeader } from "@/components/layout/section-header";
 import { DefinitionList, type DefinitionItem } from "@/components/layout/definition-list";
-import { LedgerList, LedgerRow } from "@/components/layout/ledger-row";
 import { Calibration } from "@/components/motion/calibration";
 import { TickCounter } from "@/components/motion/tick-counter";
+import { ProjectLedger } from "@/components/portfolio/project-ledger";
 import { getAllProjects, projectCategories } from "@/data/projects";
 import { buildMetadata } from "@/lib/metadata";
 import { ROUTES } from "@/constants/routes";
@@ -21,12 +21,6 @@ export const metadata: Metadata = buildMetadata({
     "Selected projects and case studies — design systems, web apps, creative WebGL, and open-source tooling.",
   path: ROUTES.projects,
 });
-
-const STATUS_LABEL: Record<string, string> = {
-  live: "Live",
-  archived: "Archived",
-  wip: "In progress",
-};
 
 export default function ProjectsPage() {
   const all = getAllProjects();
@@ -66,36 +60,10 @@ export default function ProjectsPage() {
           <SectionHeader
             eyebrow="All work"
             title="Project ledger"
-            description="Every project, filed by index. Hover a row to trace it."
+            description="Every project, filed by index. Filter by category; hover a row to trace it."
           />
           <div className="mt-10">
-            <LedgerList
-              label="All projects"
-              header={
-                <>
-                  <span className="w-16 shrink-0">Index</span>
-                  <span className="min-w-0 flex-1">Project · Stack · Year · Role</span>
-                  <span className="hidden md:block">Category · Status</span>
-                  <span>Metric</span>
-                </>
-              }
-            >
-              {all.map((project) => {
-                const firstMetric = project.metrics?.[0];
-                return (
-                  <LedgerRow
-                    key={project.slug}
-                    prefix="PRJ"
-                    index={project.order}
-                    title={project.title}
-                    href={`${ROUTES.projects}/${project.slug}`}
-                    coordinate={`${project.category} · ${STATUS_LABEL[project.status] ?? project.status}`}
-                    specs={[project.stack.join(" / "), String(project.year), project.role]}
-                    metric={firstMetric ? { value: firstMetric.value } : undefined}
-                  />
-                );
-              })}
-            </LedgerList>
+            <ProjectLedger projects={all} categories={projectCategories} />
           </div>
         </Container>
       </Section>
