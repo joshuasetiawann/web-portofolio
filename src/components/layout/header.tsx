@@ -61,7 +61,7 @@ export function Header() {
     <header
       className={cn(
         "sticky top-0 z-50 w-full border-b transition-[transform,background-color,border-color] duration-300 will-change-transform",
-        scrolled ? "glass border-border" : "border-transparent bg-transparent",
+        scrolled ? "border-border bg-background" : "border-transparent bg-transparent",
         hidden ? "-translate-y-full" : "translate-y-0",
       )}
     >

@@ -18,7 +18,8 @@
     "typecheck": "velite && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm build",
+    "check:tokens": "node scripts/check-tokens.mjs",
+    "check": "pnpm typecheck && pnpm lint && pnpm check:tokens && pnpm format:check && pnpm build",
     "prepare": "husky"
   },
   "lint-staged": {

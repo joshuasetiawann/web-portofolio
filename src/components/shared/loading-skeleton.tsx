@@ -4,22 +4,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function CardSkeleton({ className }: { className?: string }) {
   return (
-    <div
-      role="status"
-      className={cn(
-        "flex flex-col gap-4 rounded-2xl border border-border bg-surface-1 p-5",
-        className,
-      )}
-    >
-      <Skeleton className="aspect-video w-full rounded-xl" />
+    <div role="status" className={cn("flex flex-col gap-4 border border-border p-5", className)}>
+      <Skeleton className="aspect-video w-full" />
       <div className="flex flex-col gap-2">
         <Skeleton className="h-5 w-3/4" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-2/3" />
       </div>
       <div className="flex gap-2">
-        <Skeleton className="h-6 w-16 rounded-full" />
-        <Skeleton className="h-6 w-16 rounded-full" />
+        <Skeleton className="h-6 w-16" />
+        <Skeleton className="h-6 w-16" />
       </div>
       <span className="sr-only">Loading</span>
     </div>

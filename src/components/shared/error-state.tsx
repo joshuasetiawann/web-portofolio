@@ -21,13 +21,13 @@ export function ErrorState({
     <div
       role="alert"
       className={cn(
-        "flex flex-col items-center gap-4 rounded-2xl border border-border bg-surface-1 px-6 py-12 text-center",
+        "flex flex-col items-center gap-4 border border-border px-6 py-12 text-center",
         className,
       )}
     >
       <span
         aria-hidden="true"
-        className="flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive"
+        className="flex size-12 items-center justify-center border border-destructive/40 text-destructive"
       >
         <AlertTriangle className="size-6" />
       </span>

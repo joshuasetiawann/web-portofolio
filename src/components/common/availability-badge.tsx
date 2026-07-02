@@ -1,4 +1,5 @@
-// AvailabilityBadge — status pill with a reduced-motion-safe pulsing dot.
+// AvailabilityBadge — DATUM status chip: hairline, square, mono. A static square tick
+// (no continuous ping) signals state; the label carries meaning (never colour alone).
 import { cn } from "@/lib/utils";
 
 interface AvailabilityBadgeProps {
@@ -13,21 +14,14 @@ export function AvailabilityBadge({ available = true, label, className }: Availa
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-border bg-surface-1 px-3 py-1 text-sm font-medium text-foreground",
+        "inline-flex items-center gap-2 border border-border px-2.5 py-1 font-mono text-xs tracking-wider text-foreground-muted uppercase",
         className,
       )}
     >
-      <span className="relative flex size-2.5 shrink-0" aria-hidden="true">
-        {available ? (
-          <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-75 motion-safe:animate-ping" />
-        ) : null}
-        <span
-          className={cn(
-            "relative inline-flex size-2.5 rounded-full",
-            available ? "bg-success" : "bg-foreground-subtle",
-          )}
-        />
-      </span>
+      <span
+        aria-hidden="true"
+        className={cn("size-1.5 shrink-0", available ? "bg-signal" : "bg-foreground-subtle")}
+      />
       {text}
     </span>
   );

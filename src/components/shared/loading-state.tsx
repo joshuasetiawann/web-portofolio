@@ -1,6 +1,5 @@
-// Accessible loading indicator with a spinner and screen-reader status label.
-import { Loader2 } from "lucide-react";
-
+// LoadingState — DATUM instrument loader: a mono "ACQUIRING" readout over a pulsing
+// orange hairline (no spinner). Pulse is motion-safe; screen readers get a polite label.
 import { cn } from "@/lib/utils";
 
 interface LoadingStateProps {
@@ -8,7 +7,7 @@ interface LoadingStateProps {
   className?: string;
 }
 
-export function LoadingState({ label = "Loading…", className }: LoadingStateProps) {
+export function LoadingState({ label = "Acquiring…", className }: LoadingStateProps) {
   return (
     <div
       role="status"
@@ -18,9 +17,9 @@ export function LoadingState({ label = "Loading…", className }: LoadingStatePr
         className,
       )}
     >
-      <Loader2 className="size-6 animate-spin text-primary" aria-hidden="true" />
+      <span aria-hidden="true" className="block h-px w-10 bg-signal motion-safe:animate-pulse" />
       <span className="sr-only">{label}</span>
-      <span aria-hidden="true" className="text-sm">
+      <span aria-hidden="true" className="font-mono text-xs tracking-wider uppercase">
         {label}
       </span>
     </div>

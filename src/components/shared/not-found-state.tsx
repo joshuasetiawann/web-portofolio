@@ -22,7 +22,7 @@ export function NotFoundState({
     >
       <span
         aria-hidden="true"
-        className="text-gradient font-display text-6xl font-bold tracking-tight sm:text-7xl"
+        className="font-display text-6xl font-bold tracking-tight text-signal sm:text-7xl"
       >
         404
       </span>
